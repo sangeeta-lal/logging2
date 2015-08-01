@@ -2,5 +2,5 @@ package logging2;
 
 public class test {
 
-	print hello
+	print hello2
 }
