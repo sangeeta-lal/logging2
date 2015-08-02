@@ -2,5 +2,9 @@
 
 public class test {
 
-	print hello2 hmm
+	public static void main(String args[])
+	{
+		
+		System.out.println(" Hello");
+	}
 }
