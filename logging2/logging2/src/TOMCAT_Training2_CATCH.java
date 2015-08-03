@@ -121,7 +121,7 @@ public class TOMCAT_Training2_CATCH
 	//*/
     
 	///*
-	 String url = "jdbc:mysql://localhost:33067/";
+	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
 	 String userName = "sangeetal"; 
@@ -129,8 +129,8 @@ public class TOMCAT_Training2_CATCH
 	
 	//@Note: create this file using create_file_listing.py
 	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";  
-	 String non_logged_file = "E:\\Research\\Logging\\result\\tomcat_non_log_catch.txt";
-	 String logged_file = "E:\\Research\\Logging\\result\\tomcat_log_catch.txt";
+	 String non_logged_file_path = "E:\\Research\\Logging\\result\\tomcat_non_log_catch.txt";
+	 String logged_file_path = "E:\\Research\\Logging\\result\\tomcat_log_catch.txt";
 	  String table = "tomcat_catch_training2";
    //*/
 	 
