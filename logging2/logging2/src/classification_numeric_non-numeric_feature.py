@@ -62,7 +62,7 @@ knnb=1
 port=3306
 user="root"
 password="1234"
-database="logging_level"
+database="logging_level2"
 table_catch_feature =project+ "catch_training2"
 #result_table = "result_catch_expr"
 """

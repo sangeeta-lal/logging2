@@ -18,7 +18,7 @@ project = "tomcat_"
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 file_path = "E:\\Sangeeta\\Research\\logging\\result"
 """
 port=3306

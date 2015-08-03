@@ -109,7 +109,7 @@ public class TOMCAT_Training2_CATCH
 	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level";
+	 String db_name ="logging_level2";
 	 String userName = "root"; 
 	 String password = "1234";
 	
@@ -323,8 +323,7 @@ public void methodVisitor(String content)
         	catch_id= 0;
         	
         	//Contextualfeaturess
-        	
-        
+                
         	 is_method_have_param = utm.check_method_parameter (method_parameter);
         	 method_param_as_string = method_parameter.toString();
         	 method_param_as_string  = utm.clean_string(method_param_as_string);
@@ -362,9 +361,8 @@ public void methodVisitor(String content)
         		catch_id++;
         		reset_catch_flags();
         		CatchClause mycatch = (CatchClause)all_catches.get(count);
-    		
-        		
-    			
+    	
+        				
     			 	String catch_exp = mycatch.getException().getType().toString();
     	           	catch_exp = catch_exp.replace("\"", "\\\"");
     	         	catch_exp = catch_exp.replace("\'", " ");

@@ -53,7 +53,7 @@ public class cloudstack_Training_IF {
 	///*
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String userName = "root"; 
 	String password = "123";
 	String table ="cloudstack_if_train";	
@@ -65,7 +65,7 @@ public class cloudstack_Training_IF {
 	String folder_path = "";
 	String url = "jdbc:mysql://localhost:3307/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String userName = "sangeetal"; 
 	String password = "sangeetal";
 	String table ="cloudstack_if_train";

@@ -53,9 +53,9 @@ public class Tomcat_Training_CATCH {
 	//*
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String userName = "root"; 
-	String password = "123";
+	String password = "1234";
 	String table ="tomcat_catch_train";	
    // String listing_file_path = "F:\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";
 	String listing_file_path = "F:\\Research\\Logging\\result\\temp_files.txt";
@@ -65,7 +65,7 @@ public class Tomcat_Training_CATCH {
 	String folder_path = "";
 	String url = "jdbc:mysql://localhost:3307/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String userName = "sangeetal"; 
 	String password = "sangeetal";
 	String table ="tomcat_catch_train";

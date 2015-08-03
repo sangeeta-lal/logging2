@@ -17,7 +17,7 @@ project="cloudstack_"
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 file_path = "E:\\Sangeeta\\Research\\logging\\result"
 exception_ratio_file = file_path +"\\_"+project+"exception_ratio.csv"
 """

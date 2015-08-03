@@ -55,14 +55,14 @@ knnb=1
 port=3306
 user="root"
 password="123"
-database="logging_level"
+database="logging_level2"
 table_catch_feature =project+ "catch_train"
 result_table = "result_catch_expr"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 table_catch_feature = project+"catch_train"
 result_table = "result_catch_expr"
 #"""

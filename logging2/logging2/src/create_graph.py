@@ -12,7 +12,7 @@ from pylab import *
 port=3306
 user="root"
 password="123"
-database="logging_level"
+database="logging_level2"
 table = "tomcat_level_feature"
 #To save files on specified locations
 file_path="D:\\Research\\Logging\\result\\graph\\"

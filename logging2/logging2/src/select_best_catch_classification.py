@@ -38,15 +38,15 @@ project  = "tomcat_"
 #"""
 port=3306
 user="root"
-password="123"
-database="logging_level"
+password="1234"
+database="logging_level2"
 table_catch_feature =project+ "catch_train"
 
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 table_catch_feature = project+"catch_train"
 #"""
 

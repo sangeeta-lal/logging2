@@ -100,7 +100,7 @@ public class Cloudstack_Training2_CATCH {
 	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
-	 String db_name ="logging_level";
+	 String db_name ="logging_level2";
 	 String userName = "root"; 
 	 String password = "1234";
 	

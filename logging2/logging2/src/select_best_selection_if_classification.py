@@ -1,7 +1,9 @@
 
-#===========================================================================#
-##==========This file wiil be used for classification======================##
-#==========================================================================##
+#=======================================================================================#
+##==========This file wiil be used for classification===================================#
+##@@@Uses: This file will be used to find best values of classification parameter=======#
+#======================================================================================##
+
 import numpy as np
 import pylab
 import matplotlib
@@ -38,15 +40,15 @@ project  = "tomcat_"
 """
 port=3306
 user="root"
-password="123"
-database="logging_level"
+password="1234"
+database="logging_level2"
 table_if_feature =project+ "dummy_if_train"
 
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 table_if_feature = project+"if_train"
 #"""
 

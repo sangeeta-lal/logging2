@@ -50,7 +50,7 @@ public class cloudstack_ASTParser {
 	/*	
 	String url = "jdbc:mysql://localhost:3306/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String table ="cloudstack_level_feature";
 	String userName = "root"; 
 	String password = "123";
@@ -60,7 +60,7 @@ public class cloudstack_ASTParser {
     
     String url = "jdbc:mysql://localhost:3307/";
 	String driver = "com.mysql.jdbc.Driver";
-	String db_name ="logging_level";
+	String db_name ="logging_level2";
 	String table ="cloudstack_level_feature";
 	String userName = "sangeetal"; 
 	String password = "sangeetal";

@@ -56,14 +56,14 @@ knnb=1
 port=3306
 user="root"
 password="123"
-database="logging_level"
+database="logging_level2"
 table_if_feature =project+ "if_train"
 result_table = "result_if_expand"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 table_if_feature = project+"if_train"
 result_table = "result_if_expand"
 #"""
