@@ -1,0 +1,699 @@
+
+import org.eclipse.core.internal.utils.FileUtil;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+
+
+//import  static org.eclipse.jdt.core.dom.ASTNode.CATCH_CLAUSE;
+
+
+
+
+
+
+
+
+
+
+
+import java.io.*;
+import java.lang.instrument.ClassDefinition;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
+import org.eclipse.jdt.core.dom.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+/* ===========================@Author Sangeeta========
+ *  
+ *  
+ * 1.Use to write features of logged and non logged catch in database
+ * 2.  Used to write logged and non logged catch blocks in a file
+ *  
+ *  */
+
+public class Cloudstack_Training2_CATCH {
+
+	
+	int method_count = 0 ;
+	String method_parameter = "";
+	String rawContent = "";
+	String method_name = "";
+	String method_content="";
+	String class_name="";
+	String package_name = "";
+	String temp_file_path = "";
+	
+	//Set using the function of the file
+	int try_id = 0;
+	int catch_id = 0;
+	
+	int log_count = 0;
+	
+	//int logged_count=0;
+	//int non_logged_count=0;
+	
+	//@@ TRY FLAGS
+	String try_con="";
+	int try_loc = 0;
+	int is_try_logged = 0;
+	int try_log_count = 0;
+	String try_log_levels = "";
+	int is_return_in_try=0;
+	int is_thread_sleep_try = 0;
+	int throw_throws_try = 0;
+	int if_in_try=0;
+	int if_count_in_try = 0;
+	int is_assert_try = 0;
+	
+	//@@ CATCH FLAGS
+	int is_catch_logged = 0;
+	int catch_log_count=0;
+	String catch_log_levels = "";
+	int have_previous_catches=0;
+	int previous_catches_logged=0;
+	int previous_catches_log_count=0;
+	int catch_depth = 0;
+	int is_return_in_catch=0;
+	int is_catch_object_ignore=0;
+	int is_interrupted_exception=0;
+	int is_throwable_exception = 0;
+	int throw_throws_catch = 0;
+	int is_assert_catch = 0 ;
+
+	
+	ArrayList<String> all_file_list= new ArrayList<String>();
+	String log_levels_combined = "";
+	///*
+	 String url = "jdbc:mysql://localhost:3306/";
+	 String driver = "com.mysql.jdbc.Driver";
+	 String db_name ="logging_level";
+	 String userName = "root"; 
+	 String password = "1234";
+	
+	 String listing_file_path = "F:\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt";
+	 String non_logged_file_path = "F:\\Research\\Logging\\result\\cloudstack_non_log_catch.txt";
+	 String logged_file_path = "F:\\Research\\Logging\\result\\cloudstack_log_catch.txt";
+	 String table = "cloudstack_catch_training2";
+	//*/
+    //@Note: create this file using create_file_listing.py
+	/*
+	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt";  
+	 String non_logged_file = "E:\\Research\\Logging\\result\\cloudstack_non_log_catch.txt";
+	 String logged_file = "E:\\Research\\Logging\\result\\cloudstack_log_catch.txt";
+   //*/
+	 
+	 Connection conn=null;	
+     java.sql.Statement stmt = null;
+			
+	public static void main(String[] args) 
+	{
+		
+		Cloudstack_Training2_CATCH demo = new Cloudstack_Training2_CATCH();
+		demo.conn = demo.initdb(demo.db_name);
+
+	    
+		//create new file for every run
+		try {
+		       BufferedWriter bw = new BufferedWriter(new FileWriter(demo.logged_file_path));
+		       bw.close();
+		       bw = new BufferedWriter(new FileWriter(demo.non_logged_file_path));
+		       bw.close();
+		       
+		} catch (IOException e1) 
+		  {
+		
+			e1.printStackTrace();
+		  }
+       
+        
+		
+		try {
+			BufferedReader br =  new BufferedReader(new FileReader(demo.listing_file_path));
+			String file_name =  br.readLine();
+			while(br!=null)
+			{
+				System.out.println("Parsing File="+file_name);
+				int len = (file_name.split("\\\\")).length;
+				demo.package_name = file_name.split("\\\\")[len-2];
+				demo.temp_file_path= file_name.replace("\\", "\\\\");
+				//demo.id = 0;
+				demo.ast_prser(file_name);
+				file_name =  br.readLine();
+				//br=null;
+			}
+		} 
+		catch (FileNotFoundException e) 
+		{
+		   System.out.println("Error.. Can ot open the listing file");
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+			
+	}
+	
+public void ast_prser(String file_name)
+	{
+		try
+		{
+			
+			rawContent = Cloudstack_Training2_CATCH.readFileToString(file_name);
+			
+		}catch(Exception e){
+			System.out.println();
+		}
+		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		parser.setSource(rawContent.toCharArray());
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		
+		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+		
+		try{
+	    cu.accept(
+	    		
+	    			new ASTVisitor() 
+	    				{
+	    	            	public boolean visit(ImportDeclaration id) 
+	    	            	{
+	    	                   Name imp = id.getName();
+	    	               // System.out.println("import =" + id.getName().getFullyQualifiedName());
+	    	                return false;
+	    	                }
+
+	    	               public boolean visit(VariableDeclarationFragment node) 
+	    	                { 
+	    	                 SimpleName name = node.getName();
+	    	                // System.out.println("var.declaration =" + (name.getFullyQualifiedName() + ":" + cu.getLineNumber(name.getStartPosition())));
+	    	                 return false; // do not continue 
+	    	                }	    	        
+	    	        
+	    	               public boolean visit(TypeDeclaration node)
+	    	               { 
+	    	            	   String name = node.getName().toString();
+	    	            	   //System.out.println("   calss declaration =" + name);
+	    	            	   class_name = name;
+	    	            	   return true; // do not continue 
+	    	               }
+
+	    	               public boolean visit(MethodDeclaration method)
+	    	               {
+	    	            	    //id=0;
+	    	        	      	method_name = method.getName().getFullyQualifiedName();
+	    	        	        method_parameter= method.parameters().toString();
+	    	        	      	try
+	    	        	      	{
+	    	        	      	  Block methodBlock = method.getBody();
+	    	        	      	  String myblock = methodBlock.toString();
+	    	        	      	  method_content = methodBlock.toString();
+	    	        	      	  method_content =  method_content.replaceAll("\"", " ");
+	    	        	      	  method_content =  method_content.replaceAll("\'", " ");
+	    	        	      	  method_content = method_content.replaceAll("\\?"," ");
+	    	        	      	  method_content = method_content.trim();
+	    	        	      	 //myblock = myblock.replaceAll("\\?","a");
+	    	        	      	  //System.out.println("Myblock="+myblock);
+	    	        	          methodVisitor(myblock);
+	    	        	          //visitMethodDeclarion(myblock);
+	    	        	      	}catch(java.lang.NullPointerException jnull)
+	    	        	      	{
+	    	        	      		System.out.println("Method Body is NULL");
+	    	        	      		jnull.printStackTrace();	
+		    	        	      	reset_parameters();
+		    	        	        //write_in_db(0, ,"","");
+	    	        	      	}
+	    	                   catch(Exception e)
+	    	                   {
+	    	                    e.printStackTrace();
+	    	                    reset_parameters();
+	    	        	        //insert("12", "","");
+   	        	      	       }
+	    	            
+	    	                    /*reset_parameters();
+	    	        	        insert("13", "",""); 	        	      	
+	    	        	      	System.out.println("Hello");*/
+	    	        	      	return false;
+	    	               }            
+	               }
+	    	);
+		}catch(NullPointerException e) { e.printStackTrace();}
+}
+
+public void methodVisitor(String content) 
+{
+	ASTParser metparse = ASTParser.newParser(AST.JLS3);
+    metparse.setSource(content.toCharArray());
+    metparse.setKind(ASTParser.K_STATEMENTS);
+    Block block = (Block) metparse.createAST(null);
+
+    block.accept(new ASTVisitor() 
+    {
+          public boolean visit(VariableDeclarationFragment var) {
+           // debug("met.var", var.getName().getFullyQualifiedName());
+        	//System.out.println("dec");
+            return true;
+        }
+
+        public boolean visit(SimpleName node) {
+            //System.out.println(" Simple Node="+node.toString());
+        	//System.out.println("Node");
+            return true;
+        }        
+        public boolean visit(ForStatement myfor) {
+           //System.out.println("myfor="+myfor.toString());
+           //System.out.println("for");
+            return true;
+        }        
+        public boolean visit(SwitchStatement myswitch) {
+            //System.out.println("myswitch="+myswitch.toString());
+             return true;
+         }
+        public boolean visit(DoStatement mydo) {
+            //System.out.println("mydo="+mydo.toString());
+             return true;
+         }
+        public boolean visit(WhileStatement mywhile) {
+            //System.out.println("mywhile="+mywhile.toString());
+             return true;
+         }
+         
+        public boolean visit(IfStatement myif) 
+        {
+         	
+        	
+         return true;
+        }
+                
+        
+        public boolean visit(TryStatement mytry) 
+        {
+        	
+        	reset_try_flags();
+        	util_met utm = new util_met();
+        	log_level_interface tli = new log_level_interface();
+        	
+        	try_id++; 
+        	catch_id= 0;
+        	
+        	String try_con =  mytry.getBody().toString();
+           	try_con = try_con.replace("\"", "\\\"");
+        	try_con= try_con.replace("\'", " ");
+        	try_con = try_con.replace("\\\\", " ");
+        	System.out.println("Content of Try Block=" + try_con.toString() );
+        	
+        	try_loc = utm.get_try_loc_count(try_con);
+        	tli = utm.find_and_set_logging_level(try_con, tli);
+        	is_try_logged  = tli.logged;
+        	try_log_count =  tli.log_count;
+        	try_log_levels = tli.log_levels_combined;
+        	is_return_in_try=utm.check_return(try_con);
+        	is_thread_sleep_try = utm.check_thread_sleep(try_con);
+        	throw_throws_try = utm.check_thorw_throws(try_con);
+        	if_in_try = utm.check_if(try_con);
+        	if_count_in_try = utm.get_if_count(try_con);
+        	is_assert_try = utm.check_assert(try_con);
+        	
+        	String previous_catch_as_string= "";
+        	List all_catches =  mytry.catchClauses();
+        	Iterator itr = all_catches.iterator();
+        	
+        	     	 
+        	
+        	int count = 0;
+        	
+        	while(itr.hasNext())
+        	{
+        		
+        		
+        		log_level_interface catch_li = new log_level_interface();
+        		catch_id++;
+        		reset_catch_flags();
+        		CatchClause mycatch = (CatchClause)all_catches.get(count);
+    		
+        		
+    			
+    			 	String catch_exp = mycatch.getException().getType().toString();
+    	           	catch_exp = catch_exp.replace("\"", "\\\"");
+    	         	catch_exp = catch_exp.replace("\'", " ");
+    	         	catch_exp = catch_exp.replace("\\\\", " ");
+    	         	catch_exp  = utm.find_final_catch_exp(catch_exp);
+    	         	
+    	         	String catch_exp_with_obj = mycatch.getException().toString();
+    	         	
+    	         	
+    	         	String catch_con = mycatch.getBody().toString();
+    	           	catch_con = catch_con.replace("\"", "\\\"");
+    	          	catch_con = catch_con.replace("\'", "\\\'"); 
+    	          	catch_con = catch_con.replace("\\\\", " "); 
+    	           
+    	          	System.out.println("---------Set Flags----------------------");
+    	            catch_li = utm.find_and_set_logging_level(catch_con, catch_li);
+    	            is_catch_logged = catch_li.logged;
+    	            catch_log_count = catch_li.log_count;
+    	            catch_log_levels = catch_li.log_levels_combined;
+    	            have_previous_catches= utm.contains_previous_catches(count);
+    	            previous_catches_logged=utm.are_previous_catches_logged(previous_catch_as_string,count);
+    	            previous_catches_log_count = utm.get_log_count(previous_catch_as_string);
+                    is_return_in_catch= utm.check_return(catch_con);
+                    catch_depth = utm.get_catch_depth(count);
+                    is_catch_object_ignore=utm.check_ignore(catch_exp_with_obj);
+                    is_interrupted_exception = utm.check_interrupted_exception(catch_exp);
+                    is_throwable_exception = utm.check_throwable_exception(catch_exp);
+                    throw_throws_catch = utm.check_thorw_throws(catch_con);
+                    is_assert_catch= utm.check_assert(catch_con);
+                    
+    	         	System.out.println("Method Name="+ method_name);
+    	         	System.out.println("Package Name="+ package_name);
+    	         	System.out.println("File Path="+ temp_file_path);
+    	         	System.out.println("Catch Exception="+catch_exp);
+    	    
+    	         	
+    	 	        write_in_db(try_id, catch_id,try_con,catch_con,catch_exp.toString(),previous_catch_as_string,temp_file_path,package_name, class_name, method_name, try_loc, 
+    	 	        		is_try_logged, try_log_count, try_log_levels, is_catch_logged, catch_log_count, catch_log_levels, have_previous_catches, previous_catches_logged,
+    	 	        		is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try, is_throwable_exception,throw_throws_try, 
+    	 	        		throw_throws_catch,if_in_try, if_count_in_try, is_assert_try,is_assert_catch, previous_catches_log_count, catch_depth);
+    	 	      	
+    	 	       write_in_file(catch_con, catch_exp.toLowerCase(), try_con, previous_catch_as_string,  method_content, catch_log_count, method_parameter);
+    	 	      
+    	 	      	//not perfect
+    	 	      	String catch_con_with_exp = mycatch.toString();
+    	 	      	catch_con_with_exp =  catch_con_with_exp.replace("\"","\\\\");
+    	 	      	catch_con_with_exp = catch_con_with_exp.replace("\'", " ");
+    	 	      	catch_con_with_exp = catch_con_with_exp.replace("\\\\", " ");
+        			previous_catch_as_string = previous_catch_as_string +"\n" + catch_con_with_exp;
+        			    			  			
+        		count++;
+        		itr.next();
+        	}
+        	
+        	
+        	 
+        	return true;
+        }
+       
+        public boolean visit(CatchClause mycatch)
+        {
+        	String catch_train_con = "" ;
+            return true; 
+        }
+
+    }
+    );
+}
+
+
+
+protected int logged(String previous_catch_as_string, int count) {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+public void reset_parameters()
+{
+	log_levels_combined="";
+	log_count =0;
+	//method_name = "";
+	//method_content="";
+	//class_name= "";
+}
+	
+
+public void reset_catch_flags()
+{
+	is_catch_logged = 0;
+	catch_log_count = 0;
+	catch_log_levels = "";
+	have_previous_catches=0;
+	previous_catches_logged=0;
+	is_return_in_catch=0;
+	is_interrupted_exception= 0;
+	is_throwable_exception=0;
+	throw_throws_catch = 0;
+	is_assert_catch=0;
+    previous_catches_log_count=0;
+    catch_depth = 0;
+}
+
+public void reset_try_flags()
+{
+	try_loc = 0;
+	is_try_logged  = 0;
+	try_log_count =  0;
+	try_log_levels = "";
+	is_return_in_try=0;
+	is_thread_sleep_try = 0;
+	throw_throws_try = 0;
+	if_in_try=0;
+	if_count_in_try = 0;
+	is_assert_try = 0;
+}
+
+public void write_in_db(int try_id, int catch_id, String try_con, String catch_con, String catch_exception, String previous_catch_con, String file_path, 
+		String package_name, String class_name, String method_name,int try_loc, int is_try_logged, int try_log_count, String try_log_levels, int is_catch_logged, int catch_log_count, String catch_log_levels,
+		int have_previous_catches,int previous_catches_logged, int is_return_in_try, int is_return_in_catch, int is_catch_object_ignore, int is_interrupted_exception, int is_thread_sleep_try,
+		int is_throwable_exception, int throw_throws_try, int throw_throws_catch, int if_in_try, int if_count_in_try,int is_assert_try, int is_assert_catch, int previous_catches_log_count, int catch_depth)
+{
+	    
+     String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+catch_exception+"\",\""+previous_catch_con+"\",\""+file_path+"\",\""+package_name+"\",\""
+     +class_name+"\",\""+method_name+"\","+try_loc+","+is_try_logged+","+try_log_count+",\""+try_log_levels+"\","+is_catch_logged+","+catch_log_count+",\""+catch_log_levels+"\","+have_previous_catches+
+     ","+ previous_catches_logged+","+is_return_in_try+","+is_return_in_catch+","+is_catch_object_ignore+","+is_interrupted_exception+","+is_thread_sleep_try+","+ is_throwable_exception
+     +","+throw_throws_try+","+throw_throws_catch+","+if_in_try+","+if_count_in_try+","+is_assert_try+","+is_assert_catch+","+previous_catches_log_count+","+ catch_depth+")";
+     
+    System.out.println("Insert str"+insert_str);
+    
+   
+    try 
+	{
+		
+			stmt =  conn.createStatement();
+			stmt.executeUpdate(insert_str);
+	} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    
+    
+}
+
+public void write_in_file(String catch_block, String expr_type, String try_con, String all_catch_as_string, String method_content, int log_count, String method_parameter)
+{
+	//log_count=1;
+    //id++;
+    BufferedWriter bw = null;
+    int logged= 0;
+    
+    if(log_count!=0)
+    {
+    	logged =1;
+    }
+    
+    if(logged==1)
+    {
+    	    	  
+			   try
+			   {
+				 bw = new BufferedWriter(new FileWriter(logged_file_path,true));
+				 
+			  }  catch (IOException e)
+			   {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			 }
+		   
+    	   
+    }
+    else
+    {
+    	 try
+  	   {
+			   bw = new BufferedWriter(new FileWriter(non_logged_file_path, true));
+			   
+		    
+  	    } catch (IOException e) 
+  	      { 
+  	    	e.printStackTrace();
+		      }
+    }//else
+   
+    
+    
+    /* String insert_str= "insert into "+table+" values(\""+package_name+"\",\""+class_name+"\",\""+method_name+"\","+  id+",\""+method_content+"\",\""+
+    log_levels_combined+"\",\""+temp_file_path+"\","+"\""+if_block+"\",\""+expr_type+"\","+log_count+",\""
+    +if_train_con+"\","+logged+")";
+    System.out.println("Insert str"+insert_str);
+    */
+    
+    
+    try 
+    {
+    	bw.write("File Path="+temp_file_path+"\n");
+    	bw.write("Package Name ="+package_name+"\n");
+    	bw.write("class name="+class_name+"\n");
+    	bw.write("Method Name="+method_name+"\n");
+    	bw.write("Try Content="+ try_con+"\n");
+    	bw.write(" All Catch Blocks="+ all_catch_as_string+"\n");
+        bw.write("method parameter = "+ method_parameter +"\n");
+    	bw.write("method content="  +method_content+"\n");
+        bw.write("--------------------\n");
+		bw.close();
+	} catch (IOException e) 
+    {
+	
+		e.printStackTrace();
+	}
+    
+    
+    
+   
+}
+	
+public Connection initdb(String db_name)
+{
+	 try {
+		      Class.forName(driver).newInstance();
+		      conn = DriverManager.getConnection(url+db_name,userName,password);
+		      if(conn==null)
+		      {
+		    	  System.out.println("Hi I am null :( :(");
+		      }
+		      
+		 } catch (Exception e) 
+		 {
+		      e.printStackTrace();
+		 }
+		return conn;
+}
+
+
+public static String readFileToString(String filePath) throws IOException
+	{
+	    StringBuilder fileData = new StringBuilder(1000);
+	    BufferedReader reader = new BufferedReader(new FileReader(filePath));
+
+	    char[] buf = new char[10];
+	    int numRead = 0;
+	    while ((numRead = reader.read(buf)) != -1) {
+	        //          System.out.println(numRead);
+	        String readData = String.valueOf(buf, 0, numRead);
+	        fileData.append(readData);
+	        buf = new char[1024];
+	    }
+	    reader.close();
+	    return  fileData.toString();    
+ }
+	
+
+
+}//main
+
+
+
+/*
+public void visit(final MethodCallExpr n, final Void arg)
+{
+    System.out.println(n);
+    super.visit(n, arg);
+}
+
+@Override
+public boolean visit(MethodInvocation node) {
+    if (invocationsForMethods.get(activeMethod) == null) {
+        invocationsForMethods.put(activeMethod, new ArrayList<MethodInvocation>());
+    }
+    invocationsForMethods.get(activeMethod).add(node);
+    return super.visit(node);
+}*/
+
+
+
+/*
+ 
+ public boolean visit(CatchClause mycatch)
+        {
+        	String catch_train_con = "" ;
+        	//String parent_content= myif.getParent().toString();
+        	 //System.out.println(" parent_content"+parent_content);
+             //String mod_method_con = method_content.replaceAll("\n", " ");
+             //mod_method_con = method_content.replaceAll("\\s+", " ");
+             
+             //String mod_myif =  myif.toString().replaceAll("\n", " ");
+             //mod_myif =  myif.toString().replaceAll("\\s+", " ");
+            
+        	////* **  @@ Not a comment
+        	 int catch_pos = mycatch.getStartPosition();
+             catch_train_con = method_content.substring(0, catch_pos);
+             //catch_train_con = catch_train_con.replace("\n", " "); //make it comment for parsing
+           	 catch_train_con = catch_train_con.replace("\"", "\\\"");
+           	 catch_train_con = catch_train_con.replace("\'", "\\\'"); 
+          	 catch_train_con = catch_train_con.replace("\\\\", " ");
+          	// catch_train_con = catch_train_con.replaceAll("\n", " "); //make it comment for parsing
+             catch_train_con = catch_train_con.replaceAll("\\s+", " ");
+            @@@ Not a comment endhere ///
+       	
+           
+            // System.out.println("catch VALUE="+catch_train_con+" ENDcatch");
+             ///*
+             int loc = mod_method_con.indexOf(mod_myif);
+             
+             if(loc==-1)
+               {
+            	 int if_loc = myif.getStartPosition();
+            	 if_train_con = parent_content.substring(0,if_loc);            	 
+        	     //System.out.println("loc ="+loc);
+        	     System.out.println("expr"+myif.getExpression()+"if train="+if_train_con);
+               }
+             else
+             {
+            	if_train_con= mod_method_con.substring(0,loc); 
+            	//System.out.println("loc ="+loc);
+       	     	System.out.println("expr"+myif.getExpression()+"if train="+if_train_con);
+              
+             }///
+             
+            // catch_train_con = catch_train_con.replaceAll("\n", " ");
+             //catch_train_con =catch_train_con.replaceAll("\\s+", " ");
+        	
+             
+             ///*  @@@@ Not a comment
+            
+            String catch_exp = mycatch.getException().getType().toString();
+         	catch_exp = catch_exp.replace("\n", " ");
+         	catch_exp = catch_exp.replace("\"", "\\\"");
+         	catch_exp = catch_exp.replace("\'", " ");
+         	catch_exp = catch_exp.replace("\\\\", " ");
+         	
+         	String catch_block = mycatch.toString();
+         	catch_block = catch_block.replace("\n", " ");
+          	catch_block = catch_block.replace("\"", "\\\"");
+          	catch_block = catch_block.replace("\'", "\\\'"); 
+          	catch_block = catch_block.replace("\\\\", " "); 
+            System.out.println("-------------------------------");
+          	System.out.println("Class Name="+ class_name);
+         	System.out.println("Method Name="+ method_name);
+         	System.out.println("Package Name="+ package_name);
+         	System.out.println("File Path="+ temp_file_path);
+         	System.out.println("Catch Exception="+catch_exp);
+          	find_and_set_logging_level(mycatch.toString());
+ 	        insert(catch_block,catch_exp.toString(),catch_train_con);
+ 	      	reset_parameters();	
+ 	      	@@@ Not a comment  end here///
+        	
+          return true; 
+        }
+ 
+  */
+ 
