@@ -375,11 +375,11 @@ db2.commit()
                                 
      knn_score = cross_validation.cross_val_score(knn, x_data_tfidf.toarray(), target_arr, cv=cv,scoring= 'accuracy')
     # knn_cm = cross_validation.cross_val_score(knn, x_data_tfidf.toarray(), target_arr, cv=cv, 
-    #                                            scoring=metrics.confusion_matrix )
+    #        #                                    scoring=metrics.confusion_matrix )
      dt_score = cross_validation.cross_val_score(dt,   x_data_tfidf.toarray(), target_arr, cv=cv)
      rf_score = cross_validation.cross_val_score(rf,   x_data_tfidf.toarray(), target_arr, cv=cv)
      ada_score = cross_validation.cross_val_score(ada, x_data_tfidf.toarray(), target_arr, cv=cv)
-     #svc_score = cross_validation.cross_val_score(svc, x_data_tfidf.toarray(), target_arr, cv=cv)     
+     #svc_score = cross_validation.cross_val_score(svc, x_data_tfidf.toarray(), target_arr, cv=cv)      
      
      print "knn accuracy", knn_score.mean()
      print "dt accuracy",  dt_score.mean()
