@@ -152,6 +152,7 @@ public class util_met
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.start());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
+		      
 			}
 			
 			
@@ -181,7 +182,7 @@ public class util_met
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;	
 		      System.out.println("HelloLevel");
-				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				try 
 				 {
 				 // br.readLine();
@@ -200,8 +201,7 @@ public class util_met
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
-			}
-			
+			}			
 			
 			
 			if(l.log_levels_combined!="")
@@ -209,7 +209,7 @@ public class util_met
 			l.log_count= l.log_levels_combined.trim().split(" ").length;
 			l.logged = 1;
 			}
-			//System.out.println("Final Log levels are:"+log_levels_combined);
+			System.out.println("Final Log levels are:"+l.log_levels_combined);
 			
 			return l;
 	}
@@ -226,31 +226,50 @@ public class util_met
 		System.out.println("level index=" +index);
 		if(index==-1)
 		{
-			level = "log";
+			level = "NoLogLevel";
 			System.out.println("HelloLevel");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try 
 			 {
 				System.out.println("string content="+ string_content+" substring="+substring);
-			   // br.readLine();
+			    //br.readLine();
 			 }catch(Exception e)
 			{}
 			return level;
 		}
 		else
 		{
-			level= "hello";
-			System.out.println("Helljkjklj");
+			//level= "hello";
+			System.out.println("I am here");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try 
 			 {
-			  br.readLine();
+			  // br.readLine();
+			 }catch(Exception e)
+			{}
+			
+			System.out.println("Helljkjklj");
+			String  substring_part[]  =  substring.split(",");
+			System.out.println("xyz"+substring_part[0]+"xyz");
+			String temp_level2[] =  substring_part[0].split("\\.");
+			level = temp_level2[1];
+			if(level.equalsIgnoreCase("WARNING"))
+			{
+				level = "warn";
+			}
+			
+			System.out.println("level = "+ level);
+		//	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			try 
+			 {
+			   //br.readLine();
 			 }catch(Exception e)
 			{}
 			return level;
 		}
 		
 	}
+
 
 	public int contains_previous_catches(int count)
 	{
@@ -457,8 +476,96 @@ public class util_met
 		input_string = input_string.replace("\'", " ");
 		return input_string;
 	}
-
+	
+//@Uses: This method will be used to compute the 
+	public method_name_and_count get_method_call_name(String try_con, method_name_and_count mnc) 
+	{
+		String method_call_name_try = "";
+		int method_count = 0;
+		
+		//*****************************************************************************************************//
+		//@This pattern 1: Which can find all the type of methods such as 
+		//asList((FeatureDescriptor[])pds).iterator() setValue(TYPE,pds[i].getPropertyType()) 
+		//setValue(RESOLVABLE_AT_DESIGN_TIME,Boolean.TRUE) getPropertyDescriptors() getBeanInfo(base.getClass())
+		//******************************************************************************************************//		
+		Pattern pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([a-zA-Z0-9_\\s,\\[\\]\\(\\)\\.]*\\))");
+		Matcher matcher = pat.matcher(try_con);
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try 
+		 {
+		   br.readLine();
+		 }catch(Exception e)
+		{}
+		while(matcher.find())
+		{
+			  String temp_method_name =  matcher.group(0).split("\\(")[0];
+			  method_call_name_try = temp_method_name +" "+ method_call_name_try;
+			  method_count++;
+		}
+		
+		method_call_name_try = method_call_name_try.trim();
+		
+		//****************************************************************************************************//
+		// @This pattern 2: It can extract all the functions having no parameter
+		// Example : getClass()
+		//****************************************************************************************************//		
+		pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([\\s]*\\))");
+		matcher = pat.matcher(try_con);
+		while(matcher.find())
+		{
+			 String temp_method_name =  matcher.group(0).split("\\(")[0];
+			  method_call_name_try = temp_method_name +" "+ method_call_name_try;
+			  method_count++;
+		}
+		
+		method_call_name_try = method_call_name_try.trim();
+		System.out.println("Method in try names= "+ method_call_name_try);
+		try
+		 {
+		   br.readLine();
+		 }catch(Exception e)
+		{}
+		
+		mnc.method_count = method_count;
+		mnc.method_names =  method_call_name_try;
+	
+		return mnc;
+	}
 	
 	
+	//***************************************************************************************//
+	// @uses: This program is used to find and count parameters in a given string block      //
+	//***************************************************************************************//
+	public operator_and_operator_count get_operators_and_count(String try_con, 	operator_and_operator_count oaoc_try) 
+	{
+		String operator = "";
+		int operator_count = 0;
+				
+		//*****************************************************************************************************//
+		//@This pattern 1: It can find operators in a give string  
+		// operators: =, *,&, +, -, %,!, (), [],  &,? ,:
+		//******************************************************************************************************//		
+		Pattern pat = Pattern.compile("([=*+\\-%!\\(\\)\\[\\]&\\?:]+)");
+		Matcher matcher = pat.matcher(try_con);
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		try 
+		 {
+		   br.readLine();
+		 }catch(Exception e)
+		{}
+		while(matcher.find())
+		{
+			  System.out.println("operator"+matcher.group(0));
+			  operator = matcher.group(0)+" "+operator;
+			  operator_count++;
+		}
+		
+		operator = operator.trim();
+		oaoc_try.operator = operator;
+		oaoc_try.operator_count = operator_count ; 
+		return oaoc_try;
+	}
+	
 
+	
 }

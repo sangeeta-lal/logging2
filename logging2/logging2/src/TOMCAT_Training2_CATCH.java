@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 
 
+
 import java.io.*;
 import java.lang.instrument.ClassDefinition;
 import java.io.IOException;
@@ -87,6 +88,12 @@ public class TOMCAT_Training2_CATCH
 	int if_in_try=0;
 	int if_count_in_try = 0;
 	int is_assert_try = 0;
+	String method_call_names_try = "";
+	int method_call_count_try  = 0;
+	String operators_in_try = "";
+	int operators_count_try = 0;
+	String variables_in_try = "";
+	int variables_count_try = 0;
 	
 	//@@ CATCH FLAGS
 	int is_catch_logged = 0;
@@ -106,7 +113,7 @@ public class TOMCAT_Training2_CATCH
 	
 	ArrayList<String> all_file_list= new ArrayList<String>();
 	String log_levels_combined = "";
-	/*
+	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
@@ -120,7 +127,7 @@ public class TOMCAT_Training2_CATCH
 	 String table = "tomcat_catch_training2";
 	//*/
     
-	///*
+	/*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
@@ -143,6 +150,16 @@ public class TOMCAT_Training2_CATCH
 		TOMCAT_Training2_CATCH demo = new TOMCAT_Training2_CATCH();
 		demo.conn = demo.initdb(demo.db_name);
 
+		if(demo.conn==null)
+		{
+			System.out.println(" Databasse connection is null");
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			try 
+			 {
+			  br.readLine();
+			 }catch(Exception e)
+			{}
+		}
 	    
 		//create new file for every run
 		try {
@@ -156,8 +173,7 @@ public class TOMCAT_Training2_CATCH
 		
 			e1.printStackTrace();
 		  }
-       
-        
+              
 		
 		try {
 			BufferedReader br =  new BufferedReader(new FileReader(demo.listing_file_path));
@@ -194,7 +210,7 @@ public void ast_prser(String file_name)
 			rawContent = TOMCAT_Training2_CATCH.readFileToString(file_name);
 			
 		}catch(Exception e){
-			System.out.println();
+			System.out.println( );
 		}
 		ASTParser parser = ASTParser.newParser(AST.JLS3);
 		parser.setSource(rawContent.toCharArray());
@@ -233,9 +249,7 @@ public void ast_prser(String file_name)
 	    	               {
 	    	            	    //id=0;
 	    	        	      	method_name = method.getName().getFullyQualifiedName();
-	    	        	      	
-	    	        	      	
-	    	        	      		method_parameter = method.parameters();
+	    	        	      	method_parameter = method.parameters();
 	    	        	      	
 	    	        	      	try
 	    	        	      	{
@@ -326,6 +340,8 @@ public void methodVisitor(String content)
         	reset_try_flags();
         	util_met utm = new util_met();
         	log_level_interface tli = new log_level_interface();
+        	method_name_and_count mnc_try =  new method_name_and_count();
+        	operator_and_operator_count oaoc_try = new operator_and_operator_count();
         	
         	try_id++; 
         	catch_id= 0;
@@ -338,7 +354,11 @@ public void methodVisitor(String content)
         	 method_param_count = utm.get_param_count(method_parameter);
             
         	String try_con =  mytry.getBody().toString();
-           	try_con = try_con.replace("\"", "\\\"");
+           /*try_con = try_con.replace("\"", "\\\"");
+        	try_con= try_con.replace("\'", " ");
+        	try_con = try_con.replace("\\\\", " ");*/
+        	
+        	try_con = try_con.replace("\"", " ");
         	try_con= try_con.replace("\'", " ");
         	try_con = try_con.replace("\\\\", " ");
         	System.out.println("Content of Try Block=" + try_con.toString() );
@@ -354,6 +374,21 @@ public void methodVisitor(String content)
         	if_in_try = utm.check_if(try_con);
         	if_count_in_try = utm.get_if_count(try_con);
         	is_assert_try = utm.check_assert(try_con);
+        	
+        	mnc_try= utm.get_method_call_name(try_con, mnc_try);
+        	method_call_names_try = mnc_try.method_names;
+        	method_call_count_try =  mnc_try.method_count ;
+        	
+        	oaoc_try  =  utm.get_operators_and_count(try_con , oaoc_try);
+        	operators_in_try = oaoc_try.operator;
+        	operators_count_try = oaoc_try.operator_count;
+        	
+        	// @Uses: This function will use to count the variable names in the try block
+        	// *** This will set following varibels in the block  //
+        	//*** Variables_in_try =
+        	//**  variables_count_try =           //
+        	VariableVisitor(try_con); 
+        	
         	
         	String previous_catch_as_string= "";
         	List all_catches =  mytry.catchClauses();
@@ -411,7 +446,7 @@ public void methodVisitor(String content)
     	 	        		is_try_logged, try_log_count, try_log_levels, is_catch_logged, catch_log_count, catch_log_levels, have_previous_catches, previous_catches_logged,
     	 	        		is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try, is_throwable_exception,throw_throws_try, 
     	 	        		throw_throws_catch,if_in_try, if_count_in_try, is_assert_try,is_assert_catch, previous_catches_log_count, catch_depth, is_method_have_param, 
-    	 	        		method_param_as_string, method_param_count);
+    	 	        		method_param_as_string, method_param_count,method_call_names_try, 	method_call_count_try, operators_in_try, operators_count_try, variables_in_try, variables_count_try);
     	 	      	
     	 	       write_in_file(catch_con, catch_exp.toLowerCase(), try_con, previous_catch_as_string,  method_content, catch_log_count, method_param_as_string);
     	 	      
@@ -442,6 +477,31 @@ public void methodVisitor(String content)
 }
 
 
+
+//******@Uses: This is a small visitor created to extract variable name and count****************// 
+//*********************** from a given piece of code ********************************************//
+//***********************************************************************************************//
+public void VariableVisitor(String content) 
+{
+	ASTParser metparse = ASTParser.newParser(AST.JLS3);
+    metparse.setSource(content.toCharArray());
+    metparse.setKind(ASTParser.K_STATEMENTS);
+    Block block = (Block) metparse.createAST(null);
+
+    block.accept(new ASTVisitor() 
+    {
+          public boolean visit(VariableDeclarationFragment var) 
+          {
+           // debug("met.var", var.getName().getFullyQualifiedName());
+        	variables_in_try    =  variables_in_try + var.getName().getFullyQualifiedName();
+        	variables_count_try =  variables_count_try +1;
+        	
+            return true;
+        }
+
+    }
+    );
+}
 
 protected int logged(String previous_catch_as_string, int count) {
 	// TODO Auto-generated method stub
@@ -486,33 +546,43 @@ public void reset_try_flags()
 	if_in_try=0;
 	if_count_in_try = 0;
 	is_assert_try = 0;
+	method_call_names_try = "";
+	method_call_count_try=0;
+	operators_in_try = "";
+	operators_count_try = 0;
+	variables_in_try = "";
+	variables_count_try=0;
 }
 
 public void write_in_db(int try_id, int catch_id, String try_con, String catch_con, String catch_exception, String previous_catch_con, String file_path, 
 		String package_name, String class_name, String method_name,int try_loc, int is_try_logged, int try_log_count, String try_log_levels, int is_catch_logged, int catch_log_count, String catch_log_levels,
 		int have_previous_catches,int previous_catches_logged, int is_return_in_try, int is_return_in_catch, int is_catch_object_ignore, int is_interrupted_exception, int is_thread_sleep_try,
 		int is_throwable_exception, int throw_throws_try, int throw_throws_catch, int if_in_try, int if_count_in_try,int is_assert_try, int is_assert_catch, int previous_catches_log_count, int catch_depth, 
-		int is_method_have_param, String method_param_as_string,int method_param_count)
+		int is_method_have_param, String method_param_as_string,int method_param_count , String method_call_names_try, int 	method_call_count_try, String operators_in_try, int operators_count_try,
+		String variables_in_try, int variables_count_try)
 {
 	    
      String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+catch_exception+"\",\""+previous_catch_con+"\",\""+file_path+"\",\""+package_name+"\",\""
      +class_name+"\",\""+method_name+"\","+try_loc+","+is_try_logged+","+try_log_count+",\""+try_log_levels+"\","+is_catch_logged+","+catch_log_count+",\""+catch_log_levels+"\","+have_previous_catches+
      ","+ previous_catches_logged+","+is_return_in_try+","+is_return_in_catch+","+is_catch_object_ignore+","+is_interrupted_exception+","+is_thread_sleep_try+","+ is_throwable_exception
      +","+throw_throws_try+","+throw_throws_catch+","+if_in_try+","+if_count_in_try+","+is_assert_try+","+is_assert_catch+","+previous_catches_log_count+","+ catch_depth+","+
-     is_method_have_param+ ",\""+method_param_as_string+"\","+method_param_count+")";
+     is_method_have_param+ ",\""+method_param_as_string+"\","+method_param_count+",\""+method_call_names_try+"\","	+ method_call_count_try+",'"+operators_in_try+"',"+ operators_count_try  
+     +",'"+ variables_in_try+"',"+ variables_count_try+")";
      
-    //System.out.println("Insert str"+insert_str);
-     System.out.println("Try id="+try_id);
+    System.out.println("Insert str="+insert_str);
+    System.out.println("Try id="+try_id);
     
    
     try 
 	{
 		
+    	   System.out.println("I am writing");
 			stmt =  conn.createStatement();
 			stmt.executeUpdate(insert_str);
 	} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		
 		}
     
     
@@ -581,10 +651,7 @@ public void write_in_file(String catch_block, String expr_type, String try_con, 
 	
 		e.printStackTrace();
 	}
-    
-    
-    
-   
+       
 }
 	
 public Connection initdb(String db_name)
@@ -592,6 +659,7 @@ public Connection initdb(String db_name)
 	 try {
 		      Class.forName(driver).newInstance();
 		      conn = DriverManager.getConnection(url+db_name,userName,password);
+		      //System.out.println(" dbname="+ db_name+ "user name"+ userName+ " password="+ password);
 		      if(conn==null)
 		      {
 		    	  System.out.println("Hi I am null :( :(");
