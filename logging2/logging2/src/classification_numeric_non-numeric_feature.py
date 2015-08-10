@@ -123,8 +123,7 @@ target = list()
 
 logged_catch_n_features = list()
 logged_catch_t_features = list()
-logged_complete_catch_feature = list()
-
+#logged_complete_catch_features = list()
 
 for d in data:
     temp = list()
@@ -195,19 +194,19 @@ for d in data:
     
     #Call a cleaning function
     
-    logged_catch_n_feature.append(temp)     
-    logged_catch_t_feature.append(textual_feature)
+    logged_catch_n_features.append(temp)     
+    logged_catch_t_features.append(textual_feature)
     target.append(1)                  
 
 
 #========================================================================
 vectorizer = TfidfVectorizer(min_df=1)
-x_logged_catch_t_feature=vectorizer.fit_transform(logged_catch_t_feature)
-print "shape of the feature", x_logged_catch_t_feature.shape
-x_logged_catch_n_feature_array = np.asarray(logged_catch_n_feature)
-print x_logged_catch_n_feature_array.shape
+x_logged_catch_t_features=vectorizer.fit_transform(logged_catch_t_features)
+print "shape of the feature", x_logged_catch_t_features.shape
+x_logged_catch_n_features_array = np.asarray(logged_catch_n_features)
+print x_logged_catch_n_features_array.shape
 
-logged_catch_data = np.hstack([x_logged_catch_t_feature_array.toarray(), x_logged_catch_n_feature_array])
+logged_catch_data = np.hstack([x_logged_catch_t_features_array.toarray(), x_logged_catch_n_features_array])
 print logged_catch_data
 #========================================================================
 
@@ -228,7 +227,7 @@ data = select_cursor.fetchall()
 
 non_logged_catch_n_features = list()
 non_logged_catch_t_features = list()
-non_logged_complete_catch_feature = list()
+#non_logged_complete_catch_feature = list()
 
 for d in data:
     temp = list()
@@ -296,17 +295,17 @@ for d in data:
     
     #"""    
    
-    non_logged_catch_n_feature.append(temp)     
-    non_logged_catch_t_feature.append(textual_feature) 
+    non_logged_catch_n_features.append(temp)     
+    non_logged_catch_t_features.append(textual_feature) 
     target.append(0)
                       
 
 #===========================
-x_non_logged_catch_t_feature=vectorizer.fit_transform(non_logged_catch_t_feature)
-print "shape of the feature", x_non_logged_catch_t_feature.shape
-x_non_logged_catch_n_feature_array = np.asarray(non_logged_catch_n_feature)
-print x_non_logged_catch_n_feature_array.shape
-non_logged_catch_data = np.hstack([x_non_logged_catch_t_feature_array.toarray(), x_non_logged_catch_n_feature_array])
+x_non_logged_catch_t_features=vectorizer.fit_transform(non_logged_catch_t_features)
+print "shape of the feature", x_non_logged_catch_t_features.shape
+x_non_logged_catch_n_features_array = np.asarray(non_logged_catch_n_features)
+print x_non_logged_catch_n_features_array.shape
+non_logged_catch_data = np.hstack([x_non_logged_catch_t_features_array.toarray(), x_non_logged_catch_n_features_array])
 print non_logged_catch_data
 #=============================
  
