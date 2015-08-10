@@ -206,10 +206,11 @@ for d in data:
 vectorizer = TfidfVectorizer(min_df=1)
 x_logged_catch_t_feature=vectorizer.fit_transform(logged_catch_t_feature)
 print "shape of the feature", x_logged_catch_t_feature.shape
-m_other_feature_array = np.asarray(m_other_feature)
-print m_other_feature_array.shape
-m_data = np.hstack([x_title_body.toarray(), m_other_feature_array])
-print m_data
+x_logged_catch_n_feature_array = np.asarray(logged_catch_n_feature)
+print x_logged_catch_n_feature_array.shape
+
+catch_logged_data = np.hstack([x_logged_catch_t_feature_array.toarray(), x_logged_catch_n_feature_array])
+print catch_logged_data
 #============
 
 
