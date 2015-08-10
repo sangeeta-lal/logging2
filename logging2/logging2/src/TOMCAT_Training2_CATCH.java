@@ -119,7 +119,7 @@ public class TOMCAT_Training2_CATCH
 	 String db_name ="logging_level2";
 	 String userName = "root"; 
 	 String password = "1234";
-	
+	   
 	//@Note: create this file using create_file_listing.py
 	 String listing_file_path = "F:\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";
 	 String non_logged_file_path = "F:\\Research\\Logging\\result\\tomcat_non_log_catch.txt";
