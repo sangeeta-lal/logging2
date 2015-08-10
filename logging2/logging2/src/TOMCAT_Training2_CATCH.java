@@ -113,7 +113,7 @@ public class TOMCAT_Training2_CATCH
 	
 	ArrayList<String> all_file_list= new ArrayList<String>();
 	String log_levels_combined = "";
-	///*
+	/*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
@@ -127,7 +127,7 @@ public class TOMCAT_Training2_CATCH
 	 String table = "tomcat_catch_training2";
 	//*/
     
-	/*
+	///*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";

@@ -493,7 +493,7 @@ public class util_met
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try 
 		 {
-		   br.readLine();
+		   //br.readLine();
 		 }catch(Exception e)
 		{}
 		while(matcher.find())
@@ -522,7 +522,7 @@ public class util_met
 		System.out.println("Method in try names= "+ method_call_name_try);
 		try
 		 {
-		   br.readLine();
+		 //  br.readLine();
 		 }catch(Exception e)
 		{}
 		
@@ -550,7 +550,7 @@ public class util_met
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try 
 		 {
-		   br.readLine();
+		  // br.readLine();
 		 }catch(Exception e)
 		{}
 		while(matcher.find())
