@@ -195,7 +195,7 @@ for d in data:
     #Call a cleaning function
     
     logged_catch_n_features.append(temp)     
-    logged_catch_t_features.append(textual_feature)
+    logged_catch_t_features.append(textual_features)
     target.append(1)                  
 
 
@@ -296,7 +296,7 @@ for d in data:
     #"""    
    
     non_logged_catch_n_features.append(temp)     
-    non_logged_catch_t_features.append(textual_feature) 
+    non_logged_catch_t_features.append(textual_features) 
     target.append(0)
                       
 
