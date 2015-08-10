@@ -189,8 +189,8 @@ for d in data:
     temp.append(n_variables_count_try )
 
  
-    textual_features=  t_method_param_as_string +" " + t_method_param_count + " "+ t_method_call_names_try +" "+  t_method_call_count_try + " " + t_operators_in_try +" "+  t_variables_in_try+" "+\
-                       t_catch_exc
+    textual_features= (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
+                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)
     
     
     #Call a cleaning function
@@ -291,8 +291,8 @@ for d in data:
     temp.append(n_operators_count_in_try )
     temp.append(n_variables_count_try )
     
-    textual_features=  t_method_param_as_string +" " + t_method_param_count + " "+ t_method_call_names_try +" "+  t_method_call_count_try + " " + t_operators_in_try +" "+  t_variables_in_try+" "+\
-                       t_catch_exc
+    textual_features= (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
+                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)
     
     #"""    
    
