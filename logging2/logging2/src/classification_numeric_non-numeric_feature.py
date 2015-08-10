@@ -69,7 +69,7 @@ table_catch_feature =project+ "catch_training2"
 port=3307
 user="sangeetal"
 password="sangeetal"
-database="logging_level"
+database="logging_level2"
 table_catch_feature = project+"catch_training2"
 #result_table = "result_catch_expr"
 #"""
@@ -99,61 +99,119 @@ def convert(name):
     return final    
     
 def stem_it(val):
-    #print "val=", val
+    #print "val=", val@1
     temp = " ".join(PorterStemmer().stem_word(word) for word in val.split(" "))
     #print "temp=", temp
     return temp
 
 
+
 #Read if blocks which are logged
 str_logged = "select  try_loc, is_try_logged, try_log_count, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                      is_throwable_exception, throw_throws_catch, if_in_try, is_assert_in_try, is_assert_in_catch, \
+                      is_throwable_exception, throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
+                      previous_catches_log_count, catch_depth, is_method_have_param, method_param_as_string, method_param_count, method_call_names_try, \
+                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       catch_exc from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 1"
-                      
-                      
+   
 
 print "str_logged = ", str_logged
 select_cursor.execute(str_logged)
 data = select_cursor.fetchall()
+
 target = list()
-logged_catch_features = list()
+
+logged_catch_n_features = list()
+logged_catch_t_features = list()
+logged_complete_catch_feature = list()
+
+
+non_logged_complete_catch_feature = list()
+
 for d in data:
     temp = list()
-    try_loc = d[0]
-    is_try_logged = d[1]
-    try_log_count = d[2]    
-    have_previous_catches =d[3]
-    previous_catches_logged = d[4]
-    is_return_in_try = d[5]
-    is_return_in_catch = d[6]
-    is_catch_object_ignore = d[7]
-    is_interrupted_exception = d[8]
-    is_thread_sleep_try = d[9]
-    is_throwable_exception = d[10]
-    throw_throws_catch  =d[11]
-    if_in_try = d[12]
-    is_assert_in_try=d[13]
-    is_assert_in_catch = d[14]
+    
+    n_try_loc = d[0]
+    n_is_try_logged = d[1]
+    n_try_log_count = d[2]    
+    n_have_previous_catches =d[3]
+    n_previous_catches_logged = d[4]
+    n_is_return_in_try = d[5]
+    n_is_return_in_catch = d[6]
+    n_is_catch_object_ignore = d[7]
+    n_is_interrupted_exception = d[8]
+    n_is_thread_sleep_try = d[9]
+    n_is_throwable_exception = d[10]
+    n_throw_throws_try = d[11]
+    n_throw_throws_catch  =d[12]
+    n_if_in_try = d[13]
+    n_if_count_in_try = d[14]
+    n_is_assert_in_try=d[15]
+    n_is_assert_in_catch = d[16]
+    n_previous_catches_log_count = d[17]
+    n_catch_depth =d[18]
+    n_is_method_have_param = d[19]
+    
+    t_method_param_as_string =d[20]
+    t_method_param_count  =d[21]
+    t_method_call_names_try =d[22]
+    t_method_call_count_try =d[23]
+    t_operators_in_try =d[24]
+    
+    n_operators_count_in_try =d[25]
+    
+    t_variables_in_try =d[26]
+    
+    n_variables_count_try =d[27]
+    
+    t_catch_exc =d[28]
+      
                       
-    temp.append(try_loc)
-    temp.append(is_try_logged)
-    temp.append(try_log_count)    
-    temp.append(have_previous_catches)
-    temp.append(previous_catches_logged)
-    temp.append(is_return_in_try)
-    temp.append(is_return_in_catch)
-    temp.append(is_catch_object_ignore)
-    temp.append(is_interrupted_exception)
-    temp.append(is_thread_sleep_try)
-    temp.append(is_throwable_exception )
-    temp.append(throw_throws_catch)
-    temp.append(if_in_try)
-    temp.append(is_assert_in_try)
-    temp.append(is_assert_in_catch)
-    #"""
-    logged_catch_features.append(temp)
+    temp.append(n_try_loc)
+    temp.append(n_is_try_logged)
+    temp.append(n_try_log_count)    
+    temp.append(n_have_previous_catches)
+    temp.append(n_previous_catches_logged)
+    temp.append(n_is_return_in_try)
+    temp.append(n_is_return_in_catch)
+    temp.append(n_is_catch_object_ignore)
+    temp.append(n_is_interrupted_exception)
+    temp.append(n_is_thread_sleep_try)
+    temp.append(n_is_throwable_exception )
+    temp.append(n_throw_throws_try)
+    temp.append(n_throw_throws_catch)
+    temp.append(n_if_in_try)
+    temp.append(n_if_count_in_try)
+    temp.append(n_is_assert_in_try)
+    temp.append(n_is_assert_in_catch)
+    temp.append(n_previous_catches_log_count)
+    temp.append(n_catch_depth)
+    temp.append(n_is_method_have_param)
+    temp.append(n_operators_count_in_try )
+    temp.append(n_variables_count_try )
+
+ 
+    textual_features=  t_method_param_as_string +" " + t_method_param_count + " "+ t_method_call_names_try +" "+  t_method_call_count_try + " " + t_operators_in_try +" "+  t_variables_in_try+" "+\
+                       n_variables_count_try +" " +  t_catch_exc
+    
+    
+    #Call a cleaning function
+    
+    logged_catch_n_feature.append(temp)     
+    logged_catch_t_feature.append(textual_feature)
     target.append(1)                  
+
+
+#============
+vectorizer = TfidfVectorizer(min_df=1)
+x_logged_catch_t_feature=vectorizer.fit_transform(logged_catch_t_feature)
+print "shape of the feature", x_logged_catch_t_feature.shape
+m_other_feature_array = np.asarray(m_other_feature)
+print m_other_feature_array.shape
+m_data = np.hstack([x_title_body.toarray(), m_other_feature_array])
+print m_data
+#============
+
 
 str_non_logged = "select  try_loc, is_try_logged, try_log_count, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
