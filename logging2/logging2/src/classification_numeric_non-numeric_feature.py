@@ -190,7 +190,7 @@ for d in data:
 
  
     textual_features=  t_method_param_as_string +" " + t_method_param_count + " "+ t_method_call_names_try +" "+  t_method_call_count_try + " " + t_operators_in_try +" "+  t_variables_in_try+" "+\
-                       n_variables_count_try +" " +  t_catch_exc
+                       t_catch_exc
     
     
     #Call a cleaning function
@@ -292,7 +292,7 @@ for d in data:
     temp.append(n_variables_count_try )
     
     textual_features=  t_method_param_as_string +" " + t_method_param_count + " "+ t_method_call_names_try +" "+  t_method_call_count_try + " " + t_operators_in_try +" "+  t_variables_in_try+" "+\
-                       n_variables_count_try +" " +  t_catch_exc
+                       t_catch_exc
     
     #"""    
    
