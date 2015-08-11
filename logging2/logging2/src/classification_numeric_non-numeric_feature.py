@@ -198,7 +198,7 @@ for d in data:
     logged_catch_t_features.append(textual_features)
     target.append(1)                  
 
-
+"""
 #========================================================================
 vectorizer = TfidfVectorizer(min_df=1)
 x_logged_catch_t_features=vectorizer.fit_transform(logged_catch_t_features)
@@ -209,7 +209,7 @@ print x_logged_catch_n_features_array.shape
 logged_catch_data = np.hstack([x_logged_catch_t_features.toarray(), x_logged_catch_n_features_array])
 print logged_catch_data
 #========================================================================
-
+"""
 
 
 str_non_logged=  "select  try_loc, is_try_logged, try_log_count, have_previous_catches, previous_catches_logged, \
@@ -299,7 +299,7 @@ for d in data:
     non_logged_catch_t_features.append(textual_features) 
     target.append(0)
                       
-
+"""
 #===========================
 x_non_logged_catch_t_features=vectorizer.fit_transform(non_logged_catch_t_features)
 print "shape of the feature", x_non_logged_catch_t_features.shape
@@ -308,8 +308,26 @@ print x_non_logged_catch_n_features_array.shape
 non_logged_catch_data = np.hstack([x_non_logged_catch_t_features.toarray(), x_non_logged_catch_n_features_array])
 print non_logged_catch_data
 #=============================
+"""
+
+#=======================================
+vectorizer = TfidfVectorizer(min_df=1)
+total_catch_t_features =  logged_catch_t_features + non_logged_catch_t_features
+x_total_catch_t_features=vectorizer.fit_transform(total_catch_t_features)
+print "shape of the feature", x_total_catch_t_features.shape
+
+total_catch_n_features =  logged_catch_n_features  +  non_logged_catch_n_features
+x_total_catch_n_features_array = np.asarray(total_catch_n_features)
+print x_total_catch_n_features_array.shape
+
+total_data = np.hstack([x_total_catch_t_features.toarray(), x_total_catch_n_features_array])
+print total_data
+#=======================================
  
-total_data = logged_catch_data   + non_logged_catch_data
+#========================================================= 
+#total_data = logged_catch_data   + non_logged_catch_data
+#=========================================================
+
 cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val)
 

@@ -6,6 +6,19 @@
 
 from pylab import *
 
+
+temp   = list()
+temp.append("hello")
+temp.append(" life")
+
+temp2 = list()
+temp2.append(" I am ")
+temp2.append("fine")
+
+temp3 =  temp + temp2
+print" temp3=", temp3
+
+
 print "abc"
 # fake up some data
 spread= rand(50) * 100
