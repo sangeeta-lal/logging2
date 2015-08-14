@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 
 
 
@@ -22,7 +23,7 @@ public class util_met
 	
 	public int get_try_loc_count(String con)
 	{
-		//@Comment: This is a specialized method for counting for try block as it counts loc =  loc-2 , because of bracket brolem
+		//@Comment: This is a specialized method for counting for try block as it counts loc =  loc-2 , because of bracket problem
 		int loc = 0;
 		
 		String loc_arr[] = con.split("\n");
@@ -39,6 +40,22 @@ public class util_met
 		
 		return loc;
 		
+	}
+	
+	//This function is used for counting LOC 
+	public int get_loc(String con)
+	{
+		int loc=0;
+		String loc_arr[] = con.split("\n");
+		for(int i = 0; i< loc_arr.length; i++)
+		{
+			if(loc_arr[i]!="")
+			{
+				loc++;
+			}
+		}
+			
+		return loc;
 	}
 	
 	public log_level_interface find_and_set_logging_level(String string_content, log_level_interface l) 
@@ -545,7 +562,7 @@ public class util_met
 		//@This pattern 1: It can find operators in a give string  
 		// operators: =, *,&, +, -, %,!, (), [],  &,? ,:
 		//******************************************************************************************************//		
-		Pattern pat = Pattern.compile("([=*+\\-%!\\(\\)\\[\\]&\\?:]+)");
+		Pattern pat = Pattern.compile("([=*+\\-%!\\(\\)\\[\\]&\\?:|]+)");
 		Matcher matcher = pat.matcher(try_con);
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try 
@@ -565,7 +582,35 @@ public class util_met
 		oaoc_try.operator_count = operator_count ; 
 		return oaoc_try;
 	}
-	
 
+	public String balance_closing_braces(String method_try_between_con)
+	{
+		int count_opening_braces = 0;
+		int count_closing_braces = 0;
+		int diff = 0;
+		
+		count_opening_braces= StringUtils.countMatches(method_try_between_con, "{");
+        count_closing_braces = StringUtils.countMatches(method_try_between_con, "}");
+        
+        diff=   count_opening_braces   -  count_closing_braces;
+        
+        for(int  i = 0 ;i < diff; i++)
+        {
+        	method_try_between_con  =  method_try_between_con + " "+ "}";
+        }
+        
+	    //System.out.println(" Number of brackets:"+count_opening_braces+ "  closing braces="+ count_closing_braces);
+		return method_try_between_con;
+	}
+
+	
+   /* public static void main(String args[])
+    {
+	 String a = "dfdhh { djfdk {   }";
+   
+	 util_met u  =  new util_met();
+	 a= u.balance_closing_braces(a);
+	 System.out.println( " new String= "+ a);
+    }//main */
 	
 }

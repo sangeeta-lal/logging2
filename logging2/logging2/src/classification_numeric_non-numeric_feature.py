@@ -112,7 +112,9 @@ str_logged = "select  try_loc, is_try_logged, try_log_count, have_previous_catch
                       is_throwable_exception, throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
                       previous_catches_log_count, catch_depth, is_method_have_param, method_param_as_string, method_param_count, method_call_names_try, \
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      catch_exc from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 1"
+                      catch_exc, method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
+                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 1"
    
 
 print "str_logged = ", str_logged
@@ -162,7 +164,29 @@ for d in data:
     n_variables_count_try =d[27]
     
     t_catch_exc =d[28]
-      
+    
+    t_method_call_names_till_try = d[29]
+    
+    n_method_call_count_till_try=  d[30]
+    
+    t_operators_till_try =         d[31]
+    
+    n_operators_count_till_try =   d[32]
+    
+    t_variables_till_try =         d[33]
+    
+    n_variables_count_till_try =   d[34]
+    n_loc_till_try =               d[35]
+    n_is_till_try_logged=      d[36]
+    n_till_try_log_count =     d[37]
+    
+    t_till_try_log_levels =    d[38]
+    
+    n_is_return_till_try=      d[39]
+    n_throw_throws_till_try =  d[40]
+    n_if_in_till_try =         d[41]
+    n_if_count_in_till_try=    d[42]
+    n_is_assert_till_try  =    d[43]
                       
     temp.append(n_try_loc)
     temp.append(n_is_try_logged)
@@ -186,10 +210,23 @@ for d in data:
     temp.append(n_is_method_have_param)
     temp.append(n_operators_count_in_try )
     temp.append(n_variables_count_try )
-
+    temp.append(n_method_call_count_till_try)
+    temp.append(n_operators_count_till_try )
+    temp.append( n_variables_count_till_try )
+    temp.append(n_loc_till_try)
+    temp.append(n_is_till_try_logged)
+    temp.append( n_till_try_log_count )   
+    temp.append (n_is_return_till_try)
+    temp.append(n_throw_throws_till_try )
+    temp.append(n_if_in_till_try )
+    temp.append(n_if_count_in_till_try )
+    temp.append(n_is_assert_till_try  )
  
     textual_features= (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
-                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)
+                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)+ \
+                      " "+(str)(t_method_call_names_till_try )+" " + (str)(t_operators_till_try ) +" "+ (str)( t_variables_till_try )+" " + (str)(t_till_try_log_levels)
+    
+    
     
     
     #Call a cleaning function
@@ -213,11 +250,13 @@ print logged_catch_data
 
 
 str_non_logged=  "select  try_loc, is_try_logged, try_log_count, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                      is_throwable_exception, throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      previous_catches_log_count, catch_depth, is_method_have_param, method_param_as_string, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      catch_exc from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 limit 0, 827"
+                  is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
+                  is_throwable_exception, throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
+                  previous_catches_log_count, catch_depth, is_method_have_param, method_param_as_string, method_param_count, method_call_names_try, \
+                  method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
+                  catch_exc, method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
+                  variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
+                  if_in_till_try, if_count_in_till_try,  is_assert_till_try from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 limit 0, 827"
                       
 
 print "str_non_logged = ", str_non_logged
@@ -266,6 +305,29 @@ for d in data:
     n_variables_count_try =d[27]
     
     t_catch_exc =d[28]
+    
+    t_method_call_names_till_try = d[29]
+    
+    n_method_call_count_till_try=  d[30]
+    
+    t_operators_till_try =         d[31]
+    
+    n_operators_count_till_try =   d[32]
+    
+    t_variables_till_try =         d[33]
+    
+    n_variables_count_till_try =   d[34]
+    n_loc_till_try =               d[35]
+    n_is_till_try_logged=      d[36]
+    n_till_try_log_count =     d[37]
+    
+    t_till_try_log_levels =    d[38]
+    
+    n_is_return_till_try=      d[39]
+    n_throw_throws_till_try =  d[40]
+    n_if_in_till_try =         d[41]
+    n_if_count_in_till_try=    d[42]
+    n_is_assert_till_try  =    d[43]
                       
     temp.append(n_try_loc)
     temp.append(n_is_try_logged)
@@ -289,10 +351,23 @@ for d in data:
     temp.append(n_is_method_have_param)
     temp.append(n_operators_count_in_try )
     temp.append(n_variables_count_try )
-    
+    temp.append(n_method_call_count_till_try)
+    temp.append(n_operators_count_till_try )
+    temp.append( n_variables_count_till_try )
+    temp.append(n_loc_till_try)
+    temp.append(n_is_till_try_logged)
+    temp.append( n_till_try_log_count )   
+    temp.append (n_is_return_till_try)
+    temp.append(n_throw_throws_till_try )
+    temp.append(n_if_in_till_try )
+    temp.append(n_if_count_in_till_try )
+    temp.append(n_is_assert_till_try  )
+ 
     textual_features= (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
-                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)
+                     " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)+ \
+                      " "+(str)(t_method_call_names_till_try )+" " + (str)(t_operators_till_try ) +" "+ (str)( t_variables_till_try )+" " + (str)(t_till_try_log_levels)
     
+ 
     #"""    
    
     non_logged_catch_n_features.append(temp)     
