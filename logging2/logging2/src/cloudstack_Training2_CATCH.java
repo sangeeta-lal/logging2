@@ -157,8 +157,8 @@ public class cloudstack_Training2_CATCH
 	
 	//@Note: create this file using create_file_listing.py
 	 String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt";  
-	 String non_logged_file_path = "E:\\Research\\Logging\\result\\cloudstack_non_log_catch.txt";
-	 String logged_file_path = "E:\\Research\\Logging\\result\\cloudstack_log_catch.txt";
+	 String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack_non_log_catch.txt";
+	 String logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack_log_catch.txt";
 	  String table = "cloudstack_catch_training2";
    //*/
 	 
