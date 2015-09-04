@@ -230,8 +230,7 @@ public void methodVisitor(String content)
          }
          
         public boolean visit(IfStatement myif) 
-        {
-         	
+        {        	
         	
          return true;
         }
@@ -297,10 +296,10 @@ public void methodVisitor(String content)
           	catch_block = catch_block.replace("\'", "\\\'"); 
           	catch_block = catch_block.replace("\\\\", " "); 
             System.out.println("-------------------------------");
-          	System.out.println("Class Name="+ class_name);
-         	System.out.println("Method Name="+ method_name);
-         	System.out.println("Package Name="+ package_name);
-         	System.out.println("File Path="+ temp_file_path);
+          	System.out.println("Class Name="  +  class_name);
+         	System.out.println("Method Name=" +  method_name);
+         	System.out.println("Package Name="+  package_name);
+         	System.out.println("File Path="   +  temp_file_path);
          	System.out.println("Catch Exception="+catch_exp);
           	find_and_set_logging_level(mycatch.toString());
  	        insert(catch_block,catch_exp.toString(),catch_train_con);

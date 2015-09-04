@@ -134,7 +134,7 @@ public class TOMCAT_Training2_CATCH
 	
 	ArrayList<String> all_file_list= new ArrayList<String>();
 	String log_levels_combined = "";
-	/*
+	///*
 	 String url = "jdbc:mysql://localhost:3306/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
@@ -148,7 +148,7 @@ public class TOMCAT_Training2_CATCH
 	 String table = "tomcat_catch_training2";
 	//*/
     
-	///*
+	/*
 	 String url = "jdbc:mysql://localhost:3307/";
 	 String driver = "com.mysql.jdbc.Driver";
 	 String db_name ="logging_level2";
@@ -350,14 +350,12 @@ public void methodVisitor(String content)
         public boolean visit(IfStatement myif) 
         {
          	
-        	
          return true;
         }
                 
         
         public boolean visit(TryStatement mytry) 
         {
-        	
         	reset_try_flags();
         	util_met utm = new util_met();
         	log_level_interface tli = new log_level_interface();
@@ -372,12 +370,11 @@ public void methodVisitor(String content)
         	try_id++; 
         	catch_id= 0;
         	
-        	//Contextualfeaturess
-                
-        	 is_method_have_param = utm.check_method_parameter (method_parameter);
-        	 method_param_as_string = method_parameter.toString();
-        	 method_param_as_string  = utm.clean_string(method_param_as_string);
-        	 method_param_count = utm.get_param_count(method_parameter);
+        	//Contextualfeaturess                
+        	is_method_have_param = utm.check_method_parameter (method_parameter);
+        	method_param_as_string = method_parameter.toString();
+        	method_param_as_string  = utm.clean_string(method_param_as_string);
+        	method_param_count = utm.get_param_count(method_parameter);
             
         	String try_con =  mytry.getBody().toString();
            /*try_con = try_con.replace("\"", "\\\"");
@@ -413,8 +410,7 @@ public void methodVisitor(String content)
         	// *** This will set following varibels in the block  //
         	//*** Variables_in_try =
         	//**  variables_count_try =           //
-           	VariableVisitor_try(try_con); 
-        
+           	VariableVisitor_try(try_con);        
         	
         	//@******Features between method and try************@//
 
@@ -476,8 +472,7 @@ public void methodVisitor(String content)
     	         	catch_exp = catch_exp.replace("\\\\", " ");
     	         	catch_exp  = utm.find_final_catch_exp(catch_exp);
     	         	
-    	         	String catch_exp_with_obj = mycatch.getException().toString();
-    	         	
+    	         	String catch_exp_with_obj = mycatch.getException().toString();    	         	
     	         	
     	         	String catch_con = mycatch.getBody().toString();
     	           	catch_con = catch_con.replace("\"", "\\\"");
@@ -504,6 +499,7 @@ public void methodVisitor(String content)
     	         	System.out.println("Package Name="+ package_name);
     	         	System.out.println("File Path="+ temp_file_path);
     	         	System.out.println("Catch Exception="+catch_exp);
+    	         	
     	    
     	         	
     	 	        write_in_db(try_id, catch_id,try_con,catch_con,method_try_between_con, catch_exp.toString(),previous_catch_as_string,temp_file_path,package_name, class_name, method_name, try_loc, 
@@ -513,7 +509,7 @@ public void methodVisitor(String content)
     	 	        		method_param_as_string, method_param_count,method_call_names_try, 	method_call_count_try, operators_in_try, operators_count_try, variables_in_try, variables_count_try,
     	 	        		method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try, variables_count_till_try , loc_till_try,
     	 	        		is_till_try_logged ,  till_try_log_count ,  till_try_log_levels, is_return_till_try , throw_throws_till_try, if_in_till_try, if_count_in_till_try, is_assert_till_try);
-    	 	      	
+    	 	          	 	        
     	 	       write_in_file(catch_con, catch_exp.toLowerCase(), try_con, previous_catch_as_string,  method_content, catch_log_count, method_param_as_string);
     	 	      
     	 	      	//not perfect
@@ -603,7 +599,7 @@ public void VariableVisitor_method_try_between_con(String content)
     );
 } 
 
-public void interupt1()
+public void interupt()
 {
 	 BufferedReader br =  new BufferedReader(new InputStreamReader (System.in));
      try 
@@ -687,23 +683,29 @@ public void write_in_db(int try_id, int catch_id, String try_con, String catch_c
 		int is_return_till_try , int throw_throws_till_try, int if_in_till_try, int if_count_in_till_try, int is_assert_till_try)
       {
 	    
-     String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+method_try_between_con+"\",\""+catch_exception+"\",\""+previous_catch_con+"\",\""+file_path+"\",\""+package_name+"\",\""
-     +class_name+"\",\""+method_name+"\","+try_loc+","+is_try_logged+","+try_log_count+",\""+try_log_levels+"\","+is_catch_logged+","+catch_log_count+",\""+catch_log_levels+"\","+have_previous_catches+
-     ","+ previous_catches_logged+","+is_return_in_try+","+is_return_in_catch+","+is_catch_object_ignore+","+is_interrupted_exception+","+is_thread_sleep_try+","+ is_throwable_exception
-     +","+throw_throws_try+","+throw_throws_catch+","+if_in_try+","+if_count_in_try+","+is_assert_try+","+is_assert_catch+","+previous_catches_log_count+","+ catch_depth+","+
-     is_method_have_param+ ",\""+method_param_as_string+"\","+method_param_count+",\""+method_call_names_try+"\","	+ method_call_count_try+",'"+operators_in_try+"',"+ operators_count_try  
-     +",'"+ variables_in_try+"',"+ variables_count_try+",'"+ method_call_names_till_try+"',"+ method_call_count_till_try+",'"+operators_till_try+"',"+  operators_count_till_try+
-     ",'"+ variables_till_try+"',"+ varaibles_count_till_try+","+ loc_till_try+","+ is_till_try_logged +","+  till_try_log_count +",\""+  till_try_log_levels+"\","+
-     is_return_till_try +","+ throw_throws_till_try+","+ if_in_till_try+","+ if_count_in_till_try+","+ is_assert_till_try+")";
+      String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+method_try_between_con+"\",\""+catch_exception+"\",\""+previous_catch_con+
+       "\",\""+file_path+"\",\""+package_name+"\",\""
+      +class_name+"\",\""+method_name+"\","+try_loc+","+is_try_logged+","+try_log_count+",\""+try_log_levels+"\","+is_catch_logged+","+catch_log_count+",\""+catch_log_levels+"\","+have_previous_catches+
+      ","+ previous_catches_logged+","+is_return_in_try+","+is_return_in_catch+","+is_catch_object_ignore+","+is_interrupted_exception+","+is_thread_sleep_try+","+ is_throwable_exception
+      +","+throw_throws_try+","+throw_throws_catch+","+if_in_try+","+if_count_in_try+","+is_assert_try+","+is_assert_catch+","+previous_catches_log_count+","+ catch_depth+","+
+      is_method_have_param+ ",\""+method_param_as_string+"\","+method_param_count+",\""+method_call_names_try+"\","	+ method_call_count_try+",'"+operators_in_try+"',"+ operators_count_try  
+      +",'"+ variables_in_try+"',"+ variables_count_try+",'"+ method_call_names_till_try+"',"+ method_call_count_till_try+",'"+operators_till_try+"',"+  operators_count_till_try+
+      ",'"+ variables_till_try+"',"+ varaibles_count_till_try+","+ loc_till_try+","+ is_till_try_logged +","+  till_try_log_count +",\""+  till_try_log_levels+"\","+
+      is_return_till_try +","+ throw_throws_till_try+","+ if_in_till_try+","+ if_count_in_till_try+","+ is_assert_till_try+")";
      
-    System.out.println("Insert str="+insert_str);
-    System.out.println("Try id="+try_id);
+     System.out.println("Insert str="+insert_str);
+     System.out.println("Try id="+try_id);
     
-   
+    /*if("ajp".equalsIgnoreCase(package_name))
+ 	{
+ 		System.out.println("Hi for ajp:"+ package_name);
+ 		//interupt();
+ 		
+ 	}*/
     try 
 	{
 		
-    	   System.out.println("I am writing");
+    	    System.out.println("I am writing");
 			stmt =  conn.createStatement();
 			stmt.executeUpdate(insert_str);
 	} catch (SQLException e) {

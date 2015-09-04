@@ -5,7 +5,6 @@
 ======================================================================================="""
 
 
-
 #===========================================================================#
 ##==========This file wiil be used for classification======================##
 # EXPR uses only the exception of the catch condition for classification
@@ -215,20 +214,18 @@ for d in data:
     temp.append( n_variables_count_till_try )
     temp.append(n_loc_till_try)
     temp.append(n_is_till_try_logged)
-    temp.append( n_till_try_log_count )   
-    temp.append (n_is_return_till_try)
-    temp.append(n_throw_throws_till_try )
+    temp.append(n_till_try_log_count)   
+    temp.append(n_is_return_till_try)
+    temp.append(n_throw_throws_till_try)
     temp.append(n_if_in_till_try )
-    temp.append(n_if_count_in_till_try )
-    temp.append(n_is_assert_till_try  )
+    temp.append(n_if_count_in_till_try)
+    temp.append(n_is_assert_till_try)
  
-    textual_features= (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
+    textual_features=     (str)( t_method_param_as_string) +" " + (str)(t_method_param_count) + " "+ (str)(t_method_call_names_try) +\
                      " "+ (str)( t_method_call_count_try )+ " " +(str)( t_operators_in_try) +" "+ (str)( t_variables_in_try)+" "+(str) ( t_catch_exc)+ \
                       " "+(str)(t_method_call_names_till_try )+" " + (str)(t_operators_till_try ) +" "+ (str)( t_variables_till_try )+" " + (str)(t_till_try_log_levels)
     
-    
-    
-    
+      
     #Call a cleaning function
     
     logged_catch_n_features.append(temp)     
