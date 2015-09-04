@@ -1,0 +1,6 @@
+
+
+>> details:
+====================
+
+1. select   have_previous_catches FROM tomcat_catch_training2  where have_previous_catches=1 and is_catch_logged=1
