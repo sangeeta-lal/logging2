@@ -738,7 +738,7 @@ str32 = "select count(*) from "+ catch_training_table +" where  is_assert_till_t
 select_cursor.execute(str32)
 data32 = select_cursor.fetchall()
 for d in data32:
-    total_assert_in_catch= d[0]
+    total_assert_in_method_BT= d[0]
 
 str32 = "select count(*) from "+ catch_training_table +" where  is_assert_till_try=1 and  is_catch_logged =1"  
 #print "str", str32
@@ -751,7 +751,7 @@ str33 = "select count(*) from "+ catch_training_table +" where  is_assert_till_t
 select_cursor.execute(str33)
 data33 = select_cursor.fetchall()
 for d in data33:
-    assert_in_till_try_non_logged_catch= d[0]   
+    assert_in_method_BT_non_logged_catch= d[0]   
 
 print "[AM]=","total assert in method_BT= ", total_assert_in_method_BT, "assert in method_BT logged catch=" ,assert_in_method_BT_logged_catch, " non logged=", assert_in_method_BT_non_logged_catch
 print "[AM%]=", (assert_in_method_BT_logged_catch*100/logged_catch_count), "   Non Logged %=", (assert_in_method_BT_non_logged_catch*100/non_logged_catch_count)   
