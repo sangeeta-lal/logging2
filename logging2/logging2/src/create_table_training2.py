@@ -497,7 +497,7 @@ str20 = "select count(*) from "+ catch_training_table +" where throw_throws_try=
 select_cursor.execute(str20)
 data20 = select_cursor.fetchall()
 for d in data20:
-    total_throw_throws= d[0]
+    total_throw_throws_try= d[0]
 
 
 str20 = "select count(*) from "+ catch_training_table +" where throw_throws_try=1 and  is_catch_logged =1"   
