@@ -115,7 +115,7 @@ public class cloudstack_Training2_IF
 	String password = "1234";
 	String table ="cloudstack_if_training2";	
     String listing_file_path = "F:\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt";
-    
+   
     String non_logged_file_path = "F:\\Research\\Logging\\result\\cloudstack_non_log_if.txt";
 	String logged_file_path = "F:\\Research\\Logging\\result\\cloudstack_log_if.txt";
 	
@@ -130,7 +130,12 @@ public class cloudstack_Training2_IF
 	String userName = "sangeetal"; 
 	String password = "sangeetal";
 	String table ="cloudstack_if_training2";
-    String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt";  
+    String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack-4.3.0_java_files.txt"; 
+   
+    String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack_non_log_if.txt";
+	String logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\cloudstack_log_if.txt";
+	
+     
    //*/
 	 
     Connection conn=null;	

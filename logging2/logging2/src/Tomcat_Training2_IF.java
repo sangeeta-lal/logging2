@@ -130,7 +130,11 @@ public class Tomcat_Training2_IF
 	String userName = "sangeetal"; 
 	String password = "sangeetal";
 	String table ="tomcat_if_training2";
-    String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";  
+    String listing_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt"; 
+    
+    String non_logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\tomcat_non_log_if.txt";
+	String logged_file_path = "E:\\Sangeeta\\Research\\Logging\\result\\tomcat_log_if.txt";
+	
    //*/
 	 
     Connection conn=null;	
