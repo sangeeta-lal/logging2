@@ -1,10 +1,23 @@
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseException;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.expr.BinaryExpr;
+import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.MethodCallExpr;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 
 
@@ -18,7 +31,7 @@ public class util_met
 
 	public void print_hello()
 	{
-		System.out.println("Hello tonew way of coding ");
+		System.out.println("Hello to new way of coding ");
 	}
 	
 	public int get_try_loc_count(String con)
@@ -211,14 +224,30 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 5:");	
+			  System.out.println("Pat 6:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
 		      System.out.println("pattern matched = "+matcher.group(0));
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
-			}			
+			}	
+			
+			
+			//pat:    doLog(  uri, response)
+			pat = Pattern.compile("doLog\\s*\\(.*\\)");
+			matcher = pat.matcher(string_content);
+			while(matcher.find())
+			{
+			  System.out.println("Pat 7:");	
+			  System.out.print("Start index: " + matcher.start());
+		      System.out.print(" End index: " + matcher.end() + " ");
+		      System.out.println("pattern matched = "+matcher.group(0));
+		      
+		      	      
+		      l.log_levels_combined=l.log_levels_combined+" "+ " noLogLevel";
+			}	
+			
 			
 			
 			if(l.log_levels_combined!="")
@@ -238,13 +267,13 @@ public class util_met
 		int end_index= string_content.indexOf(")", start_index);
 		String substring = string_content.substring(start_index, end_index);
 		
-		System.out.println("Substring oitside="+ substring);
+		//System.out.println("Substring oitside="+ substring);
 		int index =  substring.indexOf("Level");
 		System.out.println("level index=" +index);
 		if(index==-1)
 		{
 			level = "NoLogLevel";
-			System.out.println("HelloLevel");
+			//System.out.println("HelloLevel");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try 
 			 {
@@ -257,7 +286,7 @@ public class util_met
 		else
 		{
 			//level= "hello";
-			System.out.println("I am here");
+			//System.out.println("I am here");
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			try 
 			 {
@@ -265,7 +294,7 @@ public class util_met
 			 }catch(Exception e)
 			{}
 			
-			System.out.println("Helljkjklj");
+			//System.out.println("Helljkjklj");
 			String  substring_part[]  =  substring.split(",");
 			System.out.println("xyz"+substring_part[0]+"xyz");
 			String temp_level2[] =  substring_part[0].split("\\.");
@@ -487,67 +516,49 @@ public class util_met
 		return param_count; 
 	}
 
-	public String clean_string(String input_string) 
+	public String replace_quotes_string(String input_string) 
 	{
 		input_string = input_string.replace("\"", " ");
 		input_string = input_string.replace("\'", " ");
+		input_string = input_string.replace("\\", " ");
 		return input_string;
 	}
 	
-//@Uses: This method will be used to compute the 
-	public method_name_and_count get_method_call_name(String try_con, method_name_and_count mnc) 
+
+	
+	//This function will do augmentation of string for extracting function calls
+	public String aug_for_method_call_extraction(String input)
 	{
-		String method_call_name_try = "";
-		int method_count = 0;
+		String output = "";
+		int index  =  input.indexOf("{");
 		
-		//*****************************************************************************************************//
-		//@This pattern 1: Which can find all the type of methods such as 
-		//asList((FeatureDescriptor[])pds).iterator() setValue(TYPE,pds[i].getPropertyType()) 
-		//setValue(RESOLVABLE_AT_DESIGN_TIME,Boolean.TRUE) getPropertyDescriptors() getBeanInfo(base.getClass())
-		//******************************************************************************************************//		
-		Pattern pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([a-zA-Z0-9_\\s,\\[\\]\\(\\)\\.]*\\))");
-		Matcher matcher = pat.matcher(try_con);
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		try 
-		 {
-		   //br.readLine();
-		 }catch(Exception e)
-		{}
-		while(matcher.find())
-		{
-			  String temp_method_name =  matcher.group(0).split("\\(")[0];
-			  method_call_name_try = temp_method_name +" "+ method_call_name_try;
-			  method_count++;
-		}
+		String input_substring =  input.substring(index+1);
+				
+		output= "class test { public static void main() {  " + input_substring + "  }";
+		return output;
 		
-		method_call_name_try = method_call_name_try.trim();
+	}
+	
+	//@Uses: This method will be used to compute the 
+	public method_name_and_count get_method_call_name(String input_con, method_name_and_count mnc) 
+	{
+		String method_call_names = "";
+		int method_count = 0;	    
+		String modified_input = " ";
 		
-		//****************************************************************************************************//
-		// @This pattern 2: It can extract all the functions having no parameter
-		// Example : getClass()
-		//****************************************************************************************************//		
-		pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([\\s]*\\))");
-		matcher = pat.matcher(try_con);
-		while(matcher.find())
-		{
-			 String temp_method_name =  matcher.group(0).split("\\(")[0];
-			  method_call_name_try = temp_method_name +" "+ method_call_name_try;
-			  method_count++;
-		}
-		
-		method_call_name_try = method_call_name_try.trim();
-		System.out.println("Method in try names= "+ method_call_name_try);
-		try
-		 {
-		 //  br.readLine();
-		 }catch(Exception e)
-		{}
-		
-		mnc.method_count = method_count;
-		mnc.method_names =  method_call_name_try;
+		//Do augumentation for parsng method call
+		modified_input  =  aug_for_method_call_extraction(input_con);
+		MethodCallPrinterClass obj =  new MethodCallPrinterClass();
+		method_call_names = obj.visitor(modified_input);
+		System.out.println(" method content debu:="+ modified_input);
+		method_call_names= method_call_names.trim();
+		String temp[]= method_call_names.split(" ");
+		mnc.method_count = temp.length;
+		mnc.method_names =  method_call_names;
 	
 		return mnc;
-	}
+	
+	}		
 	
 	
 	//***************************************************************************************//
@@ -560,9 +571,9 @@ public class util_met
 				
 		//*****************************************************************************************************//
 		//@This pattern 1: It can find operators in a give string  
-		// operators: =, *,&, +, -, %,!, (), [],  &,? ,:
+		// operators: =, *,&, +, -, %,!, (), [],  &,? ,:,>, <, ^, ~
 		//******************************************************************************************************//		
-		Pattern pat = Pattern.compile("([=*+\\-%!\\(\\)\\[\\]&\\?:|]+)");
+		Pattern pat = Pattern.compile("([=*+\\-%!\\(\\)\\[\\]&\\?:|><^~])");
 		Matcher matcher = pat.matcher(try_con);
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try 
@@ -572,7 +583,7 @@ public class util_met
 		{}
 		while(matcher.find())
 		{
-			  System.out.println("operator"+matcher.group(0));
+			  System.out.println("operator"+matcher.group(0)+ " operator count = "+ operator_count);
 			  operator = matcher.group(0)+" "+operator;
 			  operator_count++;
 		}
@@ -594,9 +605,11 @@ public class util_met
         
         diff=   count_opening_braces   -  count_closing_braces;
         
+       // method_try_between_con = method_try_between_con  +" {};";
+        
         for(int  i = 0 ;i < diff; i++)
         {
-        	method_try_between_con  =  method_try_between_con + " "+ "}";
+        	method_try_between_con  =  method_try_between_con + " "+ "}"; //; can be added if required
         }
         
 	    //System.out.println(" Number of brackets:"+count_opening_braces+ "  closing braces="+ count_closing_braces);
@@ -604,13 +617,288 @@ public class util_met
 	}
 
 	
-   /* public static void main(String args[])
-    {
-	 String a = "dfdhh { djfdk {   }";
-   
-	 util_met u  =  new util_met();
-	 a= u.balance_closing_braces(a);
-	 System.out.println( " new String= "+ a);
-    }//main */
+	public void interupt()
+	{
+		 BufferedReader br =  new BufferedReader(new InputStreamReader (System.in));
+	     try 
+	        {
+	         	br.readLine();
+	        }catch(Exception e)
+	     {
+	        	
+	     }
+	}
+
+	//@Uses: This method is used for cleaning parameters of method
+	public String clean_method_params(String method_param_as_string) 
+	{
+
+		method_param_as_string=  method_param_as_string.replaceAll("[\\[\\].<>?,]", " ");
+		method_param_as_string= method_param_as_string.replaceAll("\\s+", " ");
+		
+		return  method_param_as_string;
+	}
+
+
+//@Uses: This function checks whether the if condition have "null" condition in it or not.
+public int check_null_condition(String if_expr) 
+{ 
+	int null_present=0;
 	
+	if_expr =  if_expr.toString().toLowerCase();
+	if_expr =  if_expr.replace("\n"," ");
+	
+	//check if
+	Pattern throw_pat = Pattern.compile("\\s*null");
+	Matcher m = throw_pat.matcher(if_expr);
+	if(m.find())
+	{
+		
+		null_present =1;
+	}
+
+     return null_present;
+
+	}
+	
+
+//@Uses: This function checks whether the if condition have "instanceOf" condition in it or not.
+public int check_instanceOf_condition(String if_expr) 
+{ 
+	int instance_of_present=0;
+	
+	if_expr =  if_expr.toString().toLowerCase();
+	if_expr =  if_expr.replace("\n"," ");
+	
+	//check if
+	Pattern throw_pat = Pattern.compile("\\s*instanceof");
+	Matcher m = throw_pat.matcher(if_expr);
+	if(m.find())
+	{
+		
+		instance_of_present =1;
+	}
+
+   return instance_of_present;
+
+	}
+
+
+//  Returns the method param type
+public String get_method_param_type(List method_parameter)
+{
+	String method_param_type = "";
+	
+	Iterator iterator = method_parameter.iterator();
+	
+	while(iterator.hasNext())
+	{  
+		method_param_type = method_param_type  +  iterator.next().toString().split(" ")[0]+" ";
+	}
+	method_param_type  =  method_param_type.trim();
+	return method_param_type;
 }
+	
+
+//Returns the method param name
+public String get_method_param_name(List method_parameter)
+{
+  String method_param_name = "";
+  Iterator iterator = method_parameter.iterator();
+
+  while(iterator.hasNext())
+   {  
+	  method_param_name = method_param_name  +  iterator.next().toString().split(" ")[1]+" ";
+   }
+  method_param_name  =  method_param_name.trim();
+  return method_param_name;
+}
+
+
+// == This function is used in case you have a incomplete code in case of method_try_between_con or method_if_between_con ==
+public String get_modified_con_for_method_cal_extraction( String method_content, int try_pos) 
+{
+
+	String part1= "", part2="";
+	part1 =  method_content.substring(0, try_pos);
+	part2 = method_content.substring(try_pos);
+	
+	String new_string = part1  + " sangeeta(); " + part2;
+	return new_string;
+}
+
+
+
+
+
+}//class
+
+
+
+
+/*
+//@Uses: This method will be used to compute the 
+public method_name_and_count get_method_call_name(String try_con, method_name_and_count mnc) 
+{
+	String method_call_name_try = "";
+	int method_count = 0;
+	
+	//*****************************************************************************************************
+	//@This pattern 1: Which can find all the type of methods such as 
+	//asList((FeatureDescriptor[])pds).iterator() setValue(TYPE,pds[i].getPropertyType()) 
+	//setValue(RESOLVABLE_AT_DESIGN_TIME,Boolean.TRUE) getPropertyDescriptors() getBeanInfo(base.getClass())
+	//******************************************************************************************************	
+	System.out.println(" ========in=================");
+	Pattern pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([a-zA-Z0-9_\\s,\\[\\]\\(\\)\\.]+\\))");
+	Matcher matcher = pat.matcher(try_con);
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	try 
+	 {
+	   //br.readLine();
+	 }catch(Exception e)
+	{}
+
+	while(matcher.find())
+	{
+		  String temp_method_name =  matcher.group(0).split("\\(")[0];
+		  method_call_name_try = temp_method_name +" "+ method_call_name_try;
+		  method_count++;
+	}
+	
+	method_call_name_try = method_call_name_try.trim();
+	System.out.println("Method in try names= "+ method_call_name_try);
+	System.out.println(" ==out==");
+	
+	//****************************************************************************************************
+	// @This pattern 2: It can extract all the functions having no parameter
+	// Example : getClass()
+	//****************************************************************************************************	
+	pat = Pattern.compile("([a-zA-Z][0-9_a-zA-Z]*\\([\\s]*\\))");
+	matcher = pat.matcher(try_con);
+	while(matcher.find())
+	{
+		  String temp_method_name =  matcher.group(0).split("\\(")[0];
+		  method_call_name_try = temp_method_name +" "+ method_call_name_try;
+		  method_count++;
+	}
+	
+	method_call_name_try = method_call_name_try.trim();
+	System.out.println("Method in try names= "+ method_call_name_try);
+	try
+	 {
+	 //  br.readLine();
+	 }catch(Exception e)
+	{}
+	
+					
+	mnc.method_count = method_count;
+	mnc.method_names =  method_call_name_try;
+
+	return mnc;
+}
+*/
+
+/*	
+//@Uses: This method will be used to compute the 
+public method_name_and_count get_method_call_name(String try_con, method_name_and_count mnc) 
+{
+	String method_call_name_try = "";
+	int method_count = 0;
+	
+
+			
+	//*********************************************
+	//     Let me match everything               //
+	//********************************************
+	Pattern pat = Pattern.compile("(.*\\([.*]*)");
+	Matcher matcher = pat.matcher(try_con);
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	while(matcher.find())
+	{
+		  String temp_method_name =  matcher.group(0).split("\\(")[0];
+		  method_call_name_try = temp_method_name +" "+ method_call_name_try;
+		  method_count++;
+	}
+	
+	method_call_name_try = method_call_name_try.trim();
+	System.out.println("Method in try names= "+ method_call_name_try);
+	try
+	 {
+	 //  br.readLine();
+	 }catch(Exception e)
+	{}		
+	
+	
+	mnc.method_count = method_count;
+	mnc.method_names =  method_call_name_try;
+
+	return mnc;
+}
+*/
+
+/*
+//@Uses: This method will be used to compute the 
+public method_name_and_count get_method_call_name(String input_content, method_name_and_count mnc) 
+{
+	String method_call_name_try = "";
+	int method_count = 0;
+	
+	String modified_content = " ";
+	
+	//Do augumentation for parsng method call
+	modified_content  =  aug_for_method_call_extraction(input_content);
+	
+	// convert String into InputStream
+	InputStream is = new ByteArrayInputStream(modified_content.getBytes());
+	BufferedReader br = new BufferedReader(new InputStreamReader(is));        
+    
+    CompilationUnit cu = null;
+    try
+    {
+        cu = JavaParser.parse(is);
+	
+    } catch (ParseException e)
+    {
+       e.printStackTrace();
+	}
+    
+    finally
+    {
+        try {
+			is.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    new MethodVisitor().visit(cu, null);
+
+
+}
+
+// This is the function from 
+ private static class MethodVisitor extends VoidVisitorAdapter
+    {
+        @Override
+        public void visit(MethodCallExpr methodCall, Object arg)
+        {
+            System.out.print("Method call: " + methodCall.getName() + "\n");
+            List<Expression> args = methodCall.getArgs();
+            if (args != null)
+                handleExpressions(args);
+        }
+
+        private void handleExpressions(List<Expression> expressions)
+        {
+            for (Expression expr : expressions)
+            {
+                if (expr instanceof MethodCallExpr)
+                    visit((MethodCallExpr) expr, null);
+                else if (expr instanceof BinaryExpr)
+                {
+                    BinaryExpr binExpr = (BinaryExpr)expr;
+                    handleExpressions(Arrays.asList(binExpr.getLeft(), binExpr.getRight()));
+                }
+            }
+        }
+    }*/

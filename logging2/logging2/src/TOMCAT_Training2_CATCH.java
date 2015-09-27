@@ -7,21 +7,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 
 //import  static org.eclipse.jdt.core.dom.ASTNode.CATCH_CLAUSE;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import java.io.*;
 import java.lang.instrument.ClassDefinition;
 import java.io.IOException;
@@ -74,11 +59,11 @@ public class TOMCAT_Training2_CATCH
 	//@Contextual fLAGS
 	int is_method_have_param = 0;
 	int method_param_count = 0;
+	String method_param_as_string_original = "";
 	String method_param_as_string = "";
-	
-	//@@General Flags
-	String variables_in_given_block = "";
-	int variables_count_in_given_block = 0;
+	String method_param_type  = "";
+	String method_param_name= "";
+
 	
 	//@@ TRY FLAGS
 	String try_con="";
@@ -277,12 +262,14 @@ public void ast_prser(String file_name)
 	    	        	      	  Block methodBlock = method.getBody();
 	    	        	      	  String myblock = methodBlock.toString();
 	    	        	      	  method_content = methodBlock.toString();
-	    	        	      	  method_content =  method_content.replaceAll("\"", " ");
-	    	        	      	  method_content =  method_content.replaceAll("\'", " ");
-	    	        	      	  method_content = method_content.replaceAll("\\?"," ");
+	    	        	      	  //method_content =  method_content.replaceAll("\"", " ");
+	    	        	      	  //method_content =  method_content.replaceAll("\'", " ");
+	    	        	      	  method_content = method_content.replaceAll("<\\?>","   ");// @@@ Note adding two spaces for reason because it was giving error  //
+	    	        	      	  															//    in some cases if use  single space here " tr } } "             //
 	    	        	      	  method_content = method_content.trim();
-	    	        	      	 //myblock = myblock.replaceAll("\\?","a");
-	    	        	      	  //System.out.println("Myblock="+myblock);
+	    	        	      	 
+	    	        	      	  //myblock = myblock.replaceAll("\\?","a");
+	    	        	      	 //System.out.println("Myblock="+myblock);
 	    	        	          methodVisitor(myblock);
 	    	        	          //visitMethodDeclarion(myblock);
 	    	        	      	}catch(java.lang.NullPointerException jnull)
@@ -372,18 +359,26 @@ public void methodVisitor(String content)
         	
         	//Contextualfeaturess                
         	is_method_have_param = utm.check_method_parameter (method_parameter);
-        	method_param_as_string = method_parameter.toString();
-        	method_param_as_string  = utm.clean_string(method_param_as_string);
+          	method_param_as_string_original = method_parameter.toString();
+        	method_param_as_string_original  = utm.replace_quotes_string(method_param_as_string_original);
+        	method_param_as_string =  method_param_as_string_original;
+        	method_param_as_string = utm.clean_method_params(method_param_as_string);
         	method_param_count = utm.get_param_count(method_parameter);
-            
+        	
+        	method_param_type= utm.get_method_param_type(method_parameter);
+        	method_param_type = utm.clean_method_params(method_param_type);
+        	
+        	method_param_name= utm.get_method_param_name(method_parameter);
+        	method_param_name = utm.clean_method_params(method_param_name);
+        	
         	String try_con =  mytry.getBody().toString();
            /*try_con = try_con.replace("\"", "\\\"");
         	try_con= try_con.replace("\'", " ");
         	try_con = try_con.replace("\\\\", " ");*/
         	
-        	try_con = try_con.replace("\"", " ");
+        	/*try_con = try_con.replace("\"", " ");
         	try_con= try_con.replace("\'", " ");
-        	try_con = try_con.replace("\\\\", " ");
+        	try_con = try_con.replace("\\", " "); */
         	System.out.println("Content of Try Block=" + try_con.toString() );
         	
         	try_loc = utm.get_try_loc_count(try_con);
@@ -416,15 +411,16 @@ public void methodVisitor(String content)
 
         	//interupt();
             int try_pos = mytry.getStartPosition();
+            
             String method_try_between_con = method_content.substring(0, try_pos);
+            method_try_between_con  =  method_try_between_con.trim();
             method_try_between_con  =  utm.balance_closing_braces(method_try_between_con);
+            System.out.println("method  con:"+ method_content);
+            
             System.out.println("method between try con:"+ method_try_between_con);
-            
-            method_try_between_con = method_try_between_con.replace("\"", " ");
-            method_try_between_con= method_try_between_con.replace("\'", " ");
-            method_try_between_con = method_try_between_con.replace("\\\\", " ");
-            
-            mnc_till_try =  utm.get_method_call_name(method_try_between_con, mnc_till_try);
+        
+            String modified_con_for_method_call_ext  = utm.get_modified_con_for_method_cal_extraction(method_content , try_pos);
+            mnc_till_try =  utm.get_method_call_name(modified_con_for_method_call_ext, mnc_till_try);
         	method_call_names_till_try  = mnc_till_try.method_names;
         	method_call_count_till_try  = mnc_till_try.method_count;
             
@@ -438,7 +434,7 @@ public void methodVisitor(String content)
         	//**  variables_count_till_try =           //
         	VariableVisitor_method_try_between_con(method_try_between_con);   
         	
-        	loc_till_try = utm.get_try_loc_count(method_try_between_con);
+        	loc_till_try = utm.get_loc(method_try_between_con);
         	tli_till_try = utm.find_and_set_logging_level(method_try_between_con, tli_till_try);
         	is_till_try_logged  = tli_till_try.logged;
         	till_try_log_count =  tli_till_try.log_count;
@@ -448,7 +444,7 @@ public void methodVisitor(String content)
         	if_in_till_try         = utm.check_if(method_try_between_con);
         	if_count_in_till_try   = utm.get_if_count(method_try_between_con);
         	is_assert_till_try     = utm.check_assert(method_try_between_con);
-        	//interupt();
+        	
         	
         	String previous_catch_as_string= "";
         	List all_catches =  mytry.catchClauses();
@@ -475,9 +471,9 @@ public void methodVisitor(String content)
     	         	String catch_exp_with_obj = mycatch.getException().toString();    	         	
     	         	
     	         	String catch_con = mycatch.getBody().toString();
-    	           	catch_con = catch_con.replace("\"", "\\\"");
-    	          	catch_con = catch_con.replace("\'", "\\\'"); 
-    	          	catch_con = catch_con.replace("\\\\", " "); 
+    	           	//catch_con = catch_con.replace("\"", "\\\"");
+    	          	//catch_con = catch_con.replace("\'", "\\\'"); 
+    	          	//catch_con = catch_con.replace("\\\\", " "); 
     	           
     	          	System.out.println("---------Set Flags----------------------");
     	            catch_li = utm.find_and_set_logging_level(catch_con, catch_li);
@@ -505,8 +501,8 @@ public void methodVisitor(String content)
     	 	        write_in_db(try_id, catch_id,try_con,catch_con,method_try_between_con, catch_exp.toString(),previous_catch_as_string,temp_file_path,package_name, class_name, method_name, try_loc, 
     	 	        		is_try_logged, try_log_count, try_log_levels, is_catch_logged, catch_log_count, catch_log_levels, have_previous_catches, previous_catches_logged,
     	 	        		is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try, is_throwable_exception,throw_throws_try, 
-    	 	        		throw_throws_catch,if_in_try, if_count_in_try, is_assert_try,is_assert_catch, previous_catches_log_count, catch_depth, is_method_have_param, 
-    	 	        		method_param_as_string, method_param_count,method_call_names_try, 	method_call_count_try, operators_in_try, operators_count_try, variables_in_try, variables_count_try,
+    	 	        		throw_throws_catch,if_in_try, if_count_in_try, is_assert_try,is_assert_catch, previous_catches_log_count, catch_depth, is_method_have_param, method_param_as_string_original,
+    	 	        		method_param_as_string,method_param_type, method_param_name, method_param_count,method_call_names_try, 	method_call_count_try, operators_in_try, operators_count_try, variables_in_try, variables_count_try,
     	 	        		method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try, variables_count_till_try , loc_till_try,
     	 	        		is_till_try_logged ,  till_try_log_count ,  till_try_log_levels, is_return_till_try , throw_throws_till_try, if_in_till_try, if_count_in_till_try, is_assert_till_try);
     	 	          	 	        
@@ -518,7 +514,8 @@ public void methodVisitor(String content)
     	 	      	catch_con_with_exp = catch_con_with_exp.replace("\'", " ");
     	 	      	catch_con_with_exp = catch_con_with_exp.replace("\\\\", " ");
         			previous_catch_as_string = previous_catch_as_string +"\n" + catch_con_with_exp;
-        			    			  			
+        			
+        		System.out.println("=========================================================================================================================");	
         		count++;
         		itr.next();
         	}
@@ -677,18 +674,25 @@ public void write_in_db(int try_id, int catch_id, String try_con, String catch_c
 		String package_name, String class_name, String method_name,int try_loc, int is_try_logged, int try_log_count, String try_log_levels, int is_catch_logged, int catch_log_count, String catch_log_levels,
 		int have_previous_catches,int previous_catches_logged, int is_return_in_try, int is_return_in_catch, int is_catch_object_ignore, int is_interrupted_exception, int is_thread_sleep_try,
 		int is_throwable_exception, int throw_throws_try, int throw_throws_catch, int if_in_try, int if_count_in_try,int is_assert_try, int is_assert_catch, int previous_catches_log_count, int catch_depth, 
-		int is_method_have_param, String method_param_as_string,int method_param_count , String method_call_names_try, int 	method_call_count_try, String operators_in_try, int operators_count_try,
+		int is_method_have_param, String method_param_as_string_original, String method_param_as_string, String method_param_type, String method_param_name, int method_param_count , 
+		String method_call_names_try,  	int 	method_call_count_try, String operators_in_try, int operators_count_try,
 		String variables_in_try, int variables_count_try, String method_call_names_till_try,  int method_call_count_till_try, String operators_till_try , int  operators_count_till_try,
 		String variables_till_try, int varaibles_count_till_try, int loc_till_try, int is_till_try_logged , int  till_try_log_count , String till_try_log_levels, 
 		int is_return_till_try , int throw_throws_till_try, int if_in_till_try, int if_count_in_till_try, int is_assert_till_try)
       {
 	    
+	     util_met  utm =  new util_met();	  
+	    // method_content = utm.replace_quotes_string(method_content);
+	     method_try_between_con = utm.replace_quotes_string(method_try_between_con);
+	     try_con = utm.replace_quotes_string(try_con);
+	     catch_con =  utm.replace_quotes_string(catch_con);
+	
       String insert_str= "insert into "+table+" values("+try_id+"," + catch_id+",\""+try_con+"\",\""+ catch_con+"\",\""+method_try_between_con+"\",\""+catch_exception+"\",\""+previous_catch_con+
        "\",\""+file_path+"\",\""+package_name+"\",\""
       +class_name+"\",\""+method_name+"\","+try_loc+","+is_try_logged+","+try_log_count+",\""+try_log_levels+"\","+is_catch_logged+","+catch_log_count+",\""+catch_log_levels+"\","+have_previous_catches+
       ","+ previous_catches_logged+","+is_return_in_try+","+is_return_in_catch+","+is_catch_object_ignore+","+is_interrupted_exception+","+is_thread_sleep_try+","+ is_throwable_exception
       +","+throw_throws_try+","+throw_throws_catch+","+if_in_try+","+if_count_in_try+","+is_assert_try+","+is_assert_catch+","+previous_catches_log_count+","+ catch_depth+","+
-      is_method_have_param+ ",\""+method_param_as_string+"\","+method_param_count+",\""+method_call_names_try+"\","	+ method_call_count_try+",'"+operators_in_try+"',"+ operators_count_try  
+      is_method_have_param+",\""+method_param_as_string_original+ "\",\""+method_param_as_string+"\",\""+ method_param_type+"\",\""+method_param_name+"\","+method_param_count+",\""+method_call_names_try+"\","	+ method_call_count_try+",'"+operators_in_try+"',"+ operators_count_try  
       +",'"+ variables_in_try+"',"+ variables_count_try+",'"+ method_call_names_till_try+"',"+ method_call_count_till_try+",'"+operators_till_try+"',"+  operators_count_till_try+
       ",'"+ variables_till_try+"',"+ varaibles_count_till_try+","+ loc_till_try+","+ is_till_try_logged +","+  till_try_log_count +",\""+  till_try_log_levels+"\","+
       is_return_till_try +","+ throw_throws_till_try+","+ if_in_till_try+","+ if_count_in_till_try+","+ is_assert_till_try+")";

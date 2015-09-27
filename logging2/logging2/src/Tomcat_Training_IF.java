@@ -4,7 +4,11 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+
 import  static org.eclipse.jdt.core.dom.ASTNode.CATCH_CLAUSE;
+
+
+
 
 
 import java.io.*;
@@ -17,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+
 import org.eclipse.jdt.core.dom.*;
 
 import java.sql.Connection;
@@ -26,7 +31,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /* ===========================@Author Sangeeta========
- *  * This file is used to create database that can be used by python trainting  module
+ *  * This file is used to create database that can be used by python training  module
  *  * This will fill the database with desired features
  *  * http://stackoverflow.com/questions/25871510/extracting-method-call-from-catch-blocks-java
  *  * http://grepcode.com/file/repository.grepcode.com/java/eclipse.org/3.6/org.eclipse.jdt/core/3.6.0/org/eclipse/jdt/core/dom/MethodInvocation.java#MethodInvocation.%3Cinit%3E%28org.eclipse.jdt.core.dom.AST%29
@@ -57,8 +62,12 @@ public class Tomcat_Training_IF {
 	String userName = "root"; 
 	String password = "123";
 	String table ="tomcat_if_train";	
-   // String listing_file_path = "D:\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";
-	String listing_file_path = "D:\\Research\\Logging\\result\\temp_files.txt";
+    String listing_file_path = "F:\\Research\\Logging\\result\\tomcat-8.0.9_java_files.txt";
+    
+    String non_logged_file_path = "F:\\Research\\Logging\\result\\tomcat_non_log_if.txt";
+	String logged_file_path = "F:\\Research\\Logging\\result\\tomcat_log_if.txt";
+	
+	//String listing_file_path = "D:\\Research\\Logging\\result\\temp_files.txt";
 	//*/
     //@Note: create this file using create_file_listing.py
 	/*
@@ -136,9 +145,9 @@ public void ast_prser(String file_name)
 
 	    	               public boolean visit(VariableDeclarationFragment node) 
 	    	                { 
-	    	                 SimpleName name = node.getName();
-	    	                 //System.out.println("var.declaration =" + (name.getFullyQualifiedName() + ":" + cu.getLineNumber(name.getStartPosition())));
-	    	                 return false; // do not continue 
+	    	                  SimpleName name = node.getName();
+	    	                  //System.out.println("var.declaration =" + (name.getFullyQualifiedName() + ":" + cu.getLineNumber(name.getStartPosition())));
+	    	                  return false; // do not continue 
 	    	                }	    	        
 	    	        
 	    	               public boolean visit(TypeDeclaration node)
@@ -178,8 +187,8 @@ public void ast_prser(String file_name)
 	    	        	      	}
 	    	                   catch(Exception e)
 	    	                   {
-	    	                    e.printStackTrace();
-	    	                    reset_parameters();
+	    	                     e.printStackTrace();
+	    	                     reset_parameters();
 	    	        	        //insert("12", "","");
    	        	      	       }
 	    	            
@@ -272,8 +281,7 @@ public void methodVisitor(String content)
        	     	System.out.println("expr"+myif.getExpression()+"if train="+if_train_con);
               
              }*/
-             
-             
+                         
             
             String if_expr = myif.getExpression().toString();
          	if_expr = if_expr.replace("\n", " ");
@@ -294,7 +302,9 @@ public void methodVisitor(String content)
          	System.out.println("If Expression="+if_expr);
          	System.out.println("IF VALUE="+if_train_con+" ENDIF");
           	find_and_set_logging_level(myif.toString());
- 	        insert(if_block,if_expr.toString(),if_train_con);
+            write_in_file(if_block, if_expr, if_train_con ,method_content,  log_count);
+          	insert(if_block,if_expr.toString(),if_train_con);
+ 	     
  	      	reset_parameters();
          return true;
         }
@@ -311,6 +321,74 @@ public void methodVisitor(String content)
 
     }
     );
+}
+
+
+
+public void write_in_file(String if_block, String if_expr, String if_train_con,  String method_content, int log_count)
+{
+	//log_count=1;
+    //id++;
+    BufferedWriter bw = null;
+    int logged= 0;
+    
+    if(log_count!=0)
+    {
+    	logged =1;
+    }
+    
+    if(logged==1)
+    {
+    	    	  
+			   try
+			   {
+				 bw = new BufferedWriter(new FileWriter(logged_file_path,true));
+				 
+			  }  catch (IOException e)
+			   {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			 }		      	   
+    }
+    else
+    {
+    	 try
+  	   {
+			   bw = new BufferedWriter(new FileWriter(non_logged_file_path, true));
+			   
+		    
+  	    } catch (IOException e) 
+  	      { 
+  	    	e.printStackTrace();
+		      }
+    }//else
+   
+    
+    
+    /* String insert_str= "insert into "+table+" values(\""+package_name+"\",\""+class_name+"\",\""+method_name+"\","+  id+",\""+method_content+"\",\""+
+    log_levels_combined+"\",\""+temp_file_path+"\","+"\""+if_block+"\",\""+expr_type+"\","+log_count+",\""
+    +if_train_con+"\","+logged+")";
+    System.out.println("Insert str"+insert_str);
+    */
+       
+    try 
+    {
+    	bw.write("File Path="+temp_file_path+"\n");
+    	bw.write("Package Name ="+package_name+"\n");
+    	bw.write("class name="+class_name+"\n");
+    	bw.write("Method Name="+method_name+"\n");
+    	bw.write("If Content="+ if_train_con+"\n");
+    	//bw.write("All Catch Blocks="+ all_catch_as_string+"\n");
+        //bw.write("method parameter = "+ method_parameter +"\n");
+    	bw.write("method content="  +method_content+"\n");
+        bw.write("--------------------\n");
+		bw.close();
+	} catch (IOException e) 
+    {
+	
+		e.printStackTrace();
+	}
+       
 }
 
 /*
@@ -393,6 +471,7 @@ private void find_and_set_logging_level(String catch_content)
 	      //System.out.print(" End index: " + matcher.end() + " ");
 	      //System.out.println("pattern matched = "+matcher.group(1));
 	      log_levels_combined=log_levels_combined+"  "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];
+	      interupt();
 	      
 		}		
 		
@@ -450,6 +529,19 @@ private void find_and_set_logging_level(String catch_content)
 	      //System.out.println("pattern matched = "+matcher.group(1));
 	      log_levels_combined=log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];;
 		} 
+				
+		pat = Pattern.compile("doLog.*");
+		matcher = pat.matcher(catch_content);
+		while(matcher.find())
+		{
+		  System.out.println("Pat 7:");	
+		  System.out.print("Start index: " + matcher.start());
+	      System.out.print(" End index: " + matcher.end() + " ");
+	      System.out.println("pattern matched = "+matcher.group(0));
+	      interupt();
+	     // String level = get_non_standard_log_levels(catch_content, matcher.end());		      
+	      log_levels_combined= log_levels_combined + "  log";
+		}	
 		
 		if(log_levels_combined!="")
 		{
@@ -458,6 +550,21 @@ private void find_and_set_logging_level(String catch_content)
 		System.out.println("Final Log levels are:"+log_levels_combined);
 } 
 
+
+private void interupt()
+{
+	try
+	{
+	   BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	   System.out.println(" please interrupt");
+       br.readLine();
+	}
+	catch(Exception e)
+	{
+		
+	}
+	
+}
 
 public void insert(String if_block, String expr_type, String if_train_con)
 {
