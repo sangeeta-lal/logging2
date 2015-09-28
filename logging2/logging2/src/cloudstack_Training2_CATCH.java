@@ -687,6 +687,7 @@ public void write_in_db(int try_id, int catch_id, String try_con, String catch_c
 	     util_met  utm =  new util_met();	  
 	    // method_content = utm.replace_quotes_string(method_content);
 	     method_try_between_con = utm.replace_quotes_string(method_try_between_con);
+	     
 	     try_con = utm.replace_quotes_string(try_con);
 	     catch_con =  utm.replace_quotes_string(catch_con);
 	

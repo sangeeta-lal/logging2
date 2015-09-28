@@ -513,6 +513,7 @@ public void insert(String if_block, String if_expr, String method_if_between_con
     
     util_met  utm =  new util_met();	  
     method_if_between_con = utm.replace_quotes_string(method_if_between_con);
+    method_if_between_con =  "I am not inserting too large for if";
     if_block = utm.replace_quotes_string(if_block);
     if_expr = utm.replace_quotes_string(if_expr);
     file_path =  file_path.replace("\\", "\\\\");
