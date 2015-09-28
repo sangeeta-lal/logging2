@@ -415,9 +415,10 @@ public void methodVisitor(String content)
             String method_try_between_con = method_content.substring(0, try_pos);
             method_try_between_con  =  method_try_between_con.trim();
             method_try_between_con  =  utm.balance_closing_braces(method_try_between_con);
-            System.out.println("method  con:"+ method_content);
             
-            System.out.println("method between try con:"+ method_try_between_con);
+            //System.out.println("method  con:"+ method_content);
+            
+            //System.out.println("method between try con:"+ method_try_between_con);
         
             String modified_con_for_method_call_ext  = utm.get_modified_con_for_method_cal_extraction(method_content , try_pos);
             mnc_till_try =  utm.get_method_call_name(modified_con_for_method_call_ext, mnc_till_try);

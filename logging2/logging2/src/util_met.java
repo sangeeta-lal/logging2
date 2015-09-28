@@ -79,10 +79,10 @@ public class util_met
 			Matcher matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+"  "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];
 		      
 			}	
@@ -91,10 +91,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];
 			} 
 			
@@ -102,10 +102,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];;
 			} 
 			
@@ -113,10 +113,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];;
 			} 
 			
@@ -124,10 +124,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];;
 			} 
 			
@@ -135,10 +135,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Start Index ="+matcher.start());	
+			  /*System.out.println("Start Index ="+matcher.start());	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(1));
+		      System.out.println("pattern matched = "+matcher.group(1));*/
 		      l.log_levels_combined=l.log_levels_combined+" "+(matcher.group(1).split("\\.")[1]).split("\\(")[0];;
 			} 
 			
@@ -175,10 +175,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 3:");	
+			  /*System.out.println("Pat 3:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(0));
+		      System.out.println("pattern matched = "+matcher.group(0));*/
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.start());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
@@ -190,10 +190,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 4:");	
+			 /* System.out.println("Pat 4:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(0));
+		      System.out.println("pattern matched = "+matcher.group(0));*/
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
@@ -204,14 +204,14 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 5:");	
+			  /*System.out.println("Pat 5:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(0));
+		      System.out.println("pattern matched = "+matcher.group(0));*/
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;	
-		      System.out.println("HelloLevel");
+		     // System.out.println("HelloLevel");
 			  BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				try 
 				 {
@@ -224,10 +224,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 6:");	
+			  /*System.out.println("Pat 6:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(0));
+		      System.out.println("pattern matched = "+matcher.group(0));*/
 		      
 		      String level = get_non_standard_log_levels(string_content, matcher.end());		      
 		      l.log_levels_combined=l.log_levels_combined+" "+ level;
@@ -239,10 +239,10 @@ public class util_met
 			matcher = pat.matcher(string_content);
 			while(matcher.find())
 			{
-			  System.out.println("Pat 7:");	
+			  /*System.out.println("Pat 7:");	
 			  System.out.print("Start index: " + matcher.start());
 		      System.out.print(" End index: " + matcher.end() + " ");
-		      System.out.println("pattern matched = "+matcher.group(0));
+		      System.out.println("pattern matched = "+matcher.group(0));*/
 		      
 		      	      
 		      l.log_levels_combined=l.log_levels_combined+" "+ " noLogLevel";
@@ -296,7 +296,7 @@ public class util_met
 			
 			//System.out.println("Helljkjklj");
 			String  substring_part[]  =  substring.split(",");
-			System.out.println("xyz"+substring_part[0]+"xyz");
+			//System.out.println("xyz"+substring_part[0]+"xyz");
 			String temp_level2[] =  substring_part[0].split("\\.");
 			level = temp_level2[1];
 			if(level.equalsIgnoreCase("WARNING"))
@@ -550,7 +550,9 @@ public class util_met
 		modified_input  =  aug_for_method_call_extraction(input_con);
 		MethodCallPrinterClass obj =  new MethodCallPrinterClass();
 		method_call_names = obj.visitor(modified_input);
-		System.out.println(" method content debu:="+ modified_input);
+		
+		//System.out.println(" method content debu:="+ modified_input);
+		
 		method_call_names= method_call_names.trim();
 		String temp[]= method_call_names.split(" ");
 		mnc.method_count = temp.length;
@@ -583,7 +585,7 @@ public class util_met
 		{}
 		while(matcher.find())
 		{
-			  System.out.println("operator"+matcher.group(0)+ " operator count = "+ operator_count);
+			 // System.out.println("operator"+matcher.group(0)+ " operator count = "+ operator_count);
 			  operator = matcher.group(0)+" "+operator;
 			  operator_count++;
 		}
