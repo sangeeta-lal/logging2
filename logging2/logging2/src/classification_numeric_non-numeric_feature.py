@@ -484,10 +484,10 @@ print total_data
 cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val)
 
-
+"""
 #====1.  KNN algorithm====================#
 for temp_leaf_size in range(100):
-    for temp_nbr  in range(51):
+    for temp_nbr  in range(20):
         print "Knn temp leaf size = ", temp_leaf_size+1, " Nbr =",temp_nbr+1
 
         knn = KNeighborsClassifier(algorithm='auto', leaf_size=temp_leaf_size+1, metric='minkowski',
@@ -517,80 +517,48 @@ for temp_leaf_size in range(100):
         insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  "+ (str)(temp_leaf_size+1)+ "," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
         "," + (str)(knn_recall.mean()) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc.mean())+")"
         print "insert str = ",insert_knn_str
+        insert_cursor.execute(insert_knn_str)
+        db1.commit()
+"""
         
-        
-    
-dt  =DecisionTreeClassifier(max_depth=5)
-gnb = GaussianNB() # Guasian Niave Bayes
-rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
-ada =    AdaBoostClassifier(n_estimators=100)
-svc =     SVC(kernel="linear", C=0.025)
 
-dt_score = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+#==== Decition Trees Classifieer= ======#        
+for temp_max_depth in range(100):
+        print " temp max depth =", temp_max_depth
+        dt  =DecisionTreeClassifier(max_depth= temp_max_depth+1)
+        
+        
+        dt_score = cross_validation.cross_val_score(dt,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-dt_acc = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+        dt_acc = cross_validation.cross_val_score(dt,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-dt_precision = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+        dt_precision = cross_validation.cross_val_score(dt,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-dt_recall = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+        dt_recall = cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-dt_f1= cross_validation.cross_val_score(dt,np.asarray(total_data), 
+        dt_f1= cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-dt_roc = cross_validation.cross_val_score(dt,np.asarray(total_data),
+        dt_roc = cross_validation.cross_val_score(dt,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-print "dt =", dt_score.mean()
-print "dt accuracy =", dt_acc.mean()
-print "dt precision =", dt_precision.mean()
-print "dt reacll =", dt_recall.mean()
-print "dt f1=", dt_f1.mean()
-print "dt roc=", dt_roc.mean()
+        
+        print "dt =", dt_score.mean()
+        print "dt accuracy =", dt_acc.mean()
+        print "dt precision =", dt_precision.mean()
+        print "dt reacll =", dt_recall.mean()
+        print "dt f1=", dt_f1.mean()
+        print "dt roc=", dt_roc.mean()
 
-"""        
-total_dt_acc = total_dt_acc +dt_acc.mean()
-total_dt_precision = total_dt_precision +dt_precision.mean()
-total_dt_recall = total_dt_recall +dt_recall.mean()
-total_dt_f1 = total_dt_f1 + dt_f1.mean()
-total_dt_roc = total_dt_roc +dt_roc.mean()
-"""
-    #ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), np.asarray(target), cv=cv)
-    #print "ada = ", ada_score.mean()
-ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), 
-                                            np.asarray(target), cv=cv)
-ada_acc = cross_validation.cross_val_score(ada,np.asarray(total_data), 
-       np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-ada_precision = cross_validation.cross_val_score(ada,np.asarray(total_data), 
-              np.asarray(target), cv=cv,score_func=metrics.precision_score)
-ada_recall = cross_validation.cross_val_score(ada,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.recall_score)
-ada_f1= cross_validation.cross_val_score(ada,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.f1_score)
-ada_roc = cross_validation.cross_val_score(ada,np.asarray(total_data),
-         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-print "ada =", ada_score.mean()
-print "ada accuracy=", ada_acc.mean()
-print "ada precision=", ada_precision.mean()
-print "ada recall=", ada_recall.mean()
-print "ada f1=", ada_f1.mean()
-print "ada roc=", ada_roc.mean()
-
-"""        
-total_ada_acc = total_ada_acc +ada_acc.mean()
-total_ada_precision = total_ada_precision +ada_precision.mean()
-total_ada_recall = total_ada_recall +ada_recall.mean()
-total_ada_f1 = total_ada_f1 + ada_f1.mean()
-total_ada_roc = total_ada_roc +ada_roc.mean()
-"""
+        insert_dt_str =  "insert into dt_catch_training2_results values( \"dt\",  "+ (str)(temp_max_depth+1)+ ", "+ (str)(dt_acc.mean()) + ", "+ (str)(dt_precision.mean())+ \
+        "," + (str)(dt_recall.mean()) +","+ (str)(dt_f1.mean()) +","+ (str)(dt_roc.mean())+")"
+        print "insert str = ",insert_dt_str
+        insert_cursor.execute(insert_dt_str)
+        db1.commit()
 
 
+#========= GnB===================================================#        
+gnb = GaussianNB() # Guasian Niave Bayes
 
-"""
-total_knn_acc = total_knn_acc +knn_acc.mean()
-total_knn_precision = total_knn_precision +knn_precision.mean()
-total_knn_recall = total_knn_recall +knn_recall.mean()
-total_knn_f1 = total_knn_f1 + knn_f1.mean()
-total_knn_roc = total_knn_roc +knn_roc.mean()
-"""   
-   
+
 gnb_score = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
 gnb_acc = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
@@ -609,6 +577,100 @@ print "gnb precision=", gnb_precision.mean()
 print "gnb recall=", gnb_recall.mean()
 print "gnb f1=", gnb_f1.mean()
 print "gnb roc=", gnb_roc.mean()
+
+
+insert_gnb_str =  "insert into gnb_catch_training2_results values( \"gnb\",  "+  (str)(gnb_acc.mean()) + ", "+ (str)(gnb_precision.mean())+ \
+        "," + (str)(gnb_recall.mean()) +","+ (str)(gnb_f1.mean()) +","+ (str)(gnb_roc.mean())+")"
+print "insert str = ",insert_gnb_str
+insert_cursor.execute(insert_gnb_str)
+db1.commit()
+
+
+#===================Adaboost=================================#
+for temp_estimators in range(100):
+    print " temp estimators =" , temmp_estimators+1
+    ada =    AdaBoostClassifier(n_estimators=temp_estimators+1)
+    ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), 
+                                            np.asarray(target), cv=cv)
+    ada_acc = cross_validation.cross_val_score(ada,np.asarray(total_data), 
+       np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
+    ada_precision = cross_validation.cross_val_score(ada,np.asarray(total_data), 
+              np.asarray(target), cv=cv,score_func=metrics.precision_score)
+    ada_recall = cross_validation.cross_val_score(ada,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.recall_score)
+    ada_f1= cross_validation.cross_val_score(ada,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.f1_score)
+    ada_roc = cross_validation.cross_val_score(ada,np.asarray(total_data),
+         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
+    
+    print "ada =",          ada_score.mean()
+    print "ada accuracy=",  ada_acc.mean()
+    print "ada precision=", ada_precision.mean()
+    print "ada recall=",    ada_recall.mean()
+    print "ada f1=",        ada_f1.mean()
+    print "ada roc=",       ada_roc.mean()
+    
+    insert_ada_str =   "insert into ada_catch_training2_results values( \"adaboost\",  "+ (str)(temp_estimators+1)+ ", "+ (str)(ada_acc.mean()) + ", "+ (str)(ada_precision.mean())+ \
+        "," + (str)(ada_recall.mean()) +","+ (str)(ada_f1.mean()) +","+ (str)(ada_roc.mean())+")"
+    print "insert str = ",insert_ada_str
+    insert_cursor.execute(insert_ada_str)
+    db1.commit()
+
+#========================Random Forest===================================#
+
+#rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
+
+for temp_estimators in range (100):
+    print  " temp estimators = ", temp_estimator+1
+    rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
+    
+    rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+                                            np.asarray(target), cv=cv)
+    rf_accuracy = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+         np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
+    rf_precision = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+              np.asarray(target), cv=cv,score_func=metrics.precision_score)
+    rf_recall = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.recall_score)
+    rf_f1= cross_validation.cross_val_score(rf,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.f1_score)
+    rf_roc = cross_validation.cross_val_score(rf,np.asarray(total_data),
+         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
+   
+   
+    insert_rf_str =   "insert into rf_catch_training2_results values( \"rf\",  "+ (str)(temp_estimators+1)+ ", "+ (str)(rf_acc.mean()) + ", "+ (str)(rf_precision.mean())+ \
+        "," + (str)(rf_recall.mean()) +","+ (str)(rf_f1.mean()) +","+ (str)(rf_roc.mean())+")"
+    print "insert str = ",insert_rf_str
+    insert_cursor.execute(insert_rf_str)
+    db1.commit()
+
+
+svc =     SVC(kernel="linear", C=0.025)
+
+"""        
+total_dt_acc = total_dt_acc +dt_acc.mean()
+total_dt_precision = total_dt_precision +dt_precision.mean()
+total_dt_recall = total_dt_recall +dt_recall.mean()
+total_dt_f1 = total_dt_f1 + dt_f1.mean()
+total_dt_roc = total_dt_roc +dt_roc.mean()
+"""
+
+"""        
+total_ada_acc = total_ada_acc +ada_acc.mean()
+total_ada_precision = total_ada_precision +ada_precision.mean()
+total_ada_recall = total_ada_recall +ada_recall.mean()
+total_ada_f1 = total_ada_f1 + ada_f1.mean()
+total_ada_roc = total_ada_roc +ada_roc.mean()
+"""
+
+"""
+total_knn_acc = total_knn_acc +knn_acc.mean()
+total_knn_precision = total_knn_precision +knn_precision.mean()
+total_knn_recall = total_knn_recall +knn_recall.mean()
+total_knn_f1 = total_knn_f1 + knn_f1.mean()
+total_knn_roc = total_knn_roc +knn_roc.mean()
+""" 
+   
 """
 total_gnb_acc = total_gnb_acc +gnb_acc.mean()
 total_gnb_precision = total_gnb_precision +gnb_precision.mean()
@@ -617,19 +679,6 @@ total_gnb_f1 = total_gnb_f1 + gnb_f1.mean()
 total_gnb_roc = total_gnb_roc +gnb_roc.mean()
 """
 
-rf  =  RandomForestClassifier(n_estimators=75)
-rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-                                            np.asarray(target), cv=cv)
-rf_acc = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-         np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-rf_pre = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-              np.asarray(target), cv=cv,score_func=metrics.precision_score)
-rf_re = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.recall_score)
-rf_f1= cross_validation.cross_val_score(rf,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.f1_score)
-rf_roc = cross_validation.cross_val_score(rf,np.asarray(total_data),
-         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
 
   
 print "random forest acc= ", rf_acc.mean(), " f1=", rf_f1.mean(), "  rf-pre=", rf_pre.mean(), " rf-re=", rf_re.mean()     
