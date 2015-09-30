@@ -467,6 +467,7 @@ print total_data
 cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val_cross_validation)
 
+#"""
 #====1.  KNN algorithm====================#
 for temp_leaf_size in range(100):
     for temp_nbr  in range(20):
@@ -496,13 +497,15 @@ for temp_leaf_size in range(100):
         print "knn f1=", knn_f1.mean()
         print "knn roc=", knn_roc.mean()
        
-        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  "+ (str)(temp_leaf_size+1)+",'"+project+ "'," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
+        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  '"+project+"',"+ (str)(temp_leaf_size+1)+"," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
         "," + (str)(knn_recall.mean()) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc.mean())+")"
         print "insert str = ",insert_knn_str
         insert_cursor.execute(insert_knn_str)
         db1.commit()
 
-        
+ #"""
+ 
+ #"""       
 
 #==== Decition Trees Classifieer= ======#        
 for temp_max_depth in range(100):
@@ -530,12 +533,15 @@ for temp_max_depth in range(100):
         print "dt f1=", dt_f1.mean()
         print "dt roc=", dt_roc.mean()
 
-        insert_dt_str =  "insert into dt_catch_training2_results values( \"dt\",  "+ (str)(temp_max_depth+1)+",'"+project+ "'," + (str)(dt_acc.mean()) + ", "+ (str)(dt_precision.mean())+ \
+        insert_dt_str =  "insert into dt_catch_training2_results values( \"dt\",  '"+ project+"',"+ (str)(temp_max_depth+1)+","+ (str)(dt_acc.mean()) + ", "+ (str)(dt_precision.mean())+ \
         "," + (str)(dt_recall.mean()) +","+ (str)(dt_f1.mean()) +","+ (str)(dt_roc.mean())+")"
         print "insert str = ",insert_dt_str
         insert_cursor.execute(insert_dt_str)
         db1.commit()
 
+ #"""
+ 
+ #"""    
 
 #========= GnB===================================================#        
 gnb = GaussianNB() # Guasian Niave Bayes
@@ -561,12 +567,15 @@ print "gnb f1=", gnb_f1.mean()
 print "gnb roc=", gnb_roc.mean()
 
 
-insert_gnb_str =  "insert into gnb_catch_training2_results values( \"gnb\",  "+  (str)(gnb_acc.mean()) +",'"+project+ "'," + (str)(gnb_precision.mean())+ \
+insert_gnb_str =  "insert into gnb_catch_training2_results values( \"gnb\",  '"+project+"',"+  (str)(gnb_acc.mean()) +","+ (str)(gnb_precision.mean())+ \
         "," + (str)(gnb_recall.mean()) +","+ (str)(gnb_f1.mean()) +","+ (str)(gnb_roc.mean())+")"
 print "insert str = ",insert_gnb_str
 insert_cursor.execute(insert_gnb_str)
 db1.commit()
 
+ #"""
+ 
+ #"""    
 
 #===================Adaboost=================================#
 for temp_estimators in range(100):
@@ -592,12 +601,16 @@ for temp_estimators in range(100):
     print "ada f1=",        ada_f1.mean()
     print "ada roc=",       ada_roc.mean()
     
-    insert_ada_str =   "insert into ada_catch_training2_results values( \"adaboost\",  "+ (str)(temp_estimators+1)+",'"+project+ "'," + (str)(ada_acc.mean()) + ", "+ (str)(ada_precision.mean())+ \
+    insert_ada_str =   "insert into ada_catch_training2_results values( \"adaboost\",  '"+project+"',"+ (str)(temp_estimators+1)+","+ (str)(ada_acc.mean()) + ", "+ (str)(ada_precision.mean())+ \
         "," + (str)(ada_recall.mean()) +","+ (str)(ada_f1.mean()) +","+ (str)(ada_roc.mean())+")"
     print "insert str = ",insert_ada_str
     insert_cursor.execute(insert_ada_str)
     db1.commit()
 
+
+ #"""
+ 
+ #"""    
 #========================Random Forest===================================#
 
 #rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
@@ -620,12 +633,14 @@ for temp_estimators in range (100):
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
    
    
-    insert_rf_str =   "insert into rf_catch_training2_results values( \"rf\",  "+ (str)(temp_estimators+1)+",'"+project+ "'," +(str)(rf_acc.mean()) + ", "+ (str)(rf_precision.mean())+ \
+    insert_rf_str =   "insert into rf_catch_training2_results values( \"rf\", '"+project+ "'," +(str)(temp_estimators+1)+","+(str)(rf_acc.mean()) + ", "+ (str)(rf_precision.mean())+ \
         "," + (str)(rf_recall.mean()) +","+ (str)(rf_f1.mean()) +","+ (str)(rf_roc.mean())+")"
     print "insert str = ",insert_rf_str
     insert_cursor.execute(insert_rf_str)
     db1.commit()
 
+ #"""
+ 
 
 svc =     SVC(kernel="linear", C=0.025)
 
