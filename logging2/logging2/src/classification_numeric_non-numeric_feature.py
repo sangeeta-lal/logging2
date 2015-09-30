@@ -99,78 +99,83 @@ data = select_cursor.fetchall()
 
 target = list()
 
+logged_catch_block_count = 0
+logged_catch_block_count = len(data)
+print  " size = ", logged_catch_block_count
+
 logged_catch_n_features = list()
 logged_catch_t_features = list()
 #logged_complete_catch_features = list()
 
+
 for d in data:
     temp = list()
        
-    t_catch_exc     = temp[0]
-    t_package_name  = temp[1]
-    t_class_name    = temp[2]
-    t_method_name   = temp[3]
+    t_catch_exc     = d[0]
+    t_package_name  = d[1]
+    t_class_name    = d[2]
+    t_method_name   = d[3]
  
-    n_try_loc       = temp[4]
-    n_is_try_logged = temp[5]
-    n_try_log_count  =temp[6]
+    n_try_loc       = d[4]
+    n_is_try_logged = d[5]
+    n_try_log_count  =d[6]
     
-    t_try_log_levels =  temp[7]
+    t_try_log_levels =  d[7]
     
-    n_have_previous_catches=temp[8]
-    n_previous_catches_logged =temp[9]
-    n_is_return_in_try =temp[10]                     
-    n_is_return_in_catch  =temp[11]
-    n_is_catch_object_ignore =temp[12]
-    n_is_interrupted_exception =temp[13]
-    n_is_thread_sleep_try =temp[14]
-    n_throw_throws_try =temp[15]                             
-    n_throw_throws_catch=temp[16]
-    n_if_in_try =temp[17]
-    n_if_count_in_try =temp[18]
-    n_is_assert_in_try =temp[19]
-    n_is_assert_in_catch =temp[20]
-    n_is_method_have_param =temp[21]
+    n_have_previous_catches   =d[8]
+    n_previous_catches_logged =d[9]
+    n_is_return_in_try        =d[10]                     
+    n_is_return_in_catch       =d[11]
+    n_is_catch_object_ignore   =d[12]
+    n_is_interrupted_exception  =d[13]
+    n_is_thread_sleep_try      =d[14]
+    n_throw_throws_try          =d[15]                             
+    n_throw_throws_catch     =d[16]
+    n_if_in_try           =d[17]
+    n_if_count_in_try     =d[18]
+    n_is_assert_in_try    =d[19]
+    n_is_assert_in_catch  =d[20]
+    n_is_method_have_param =d[21]
     
-    t_method_param_type =temp[22]
-    t_method_param_name =temp[23]
+    t_method_param_type =d[22]
+    t_method_param_name =d[23]
    
-    n_method_param_count =temp[24]
+    n_method_param_count =d[24]
    
-    t_method_call_names_try =temp[25]
+    t_method_call_names_try =d[25]
     
-    n_method_call_count_try=temp[26]
+    n_method_call_count_try=d[26]
    
-    t_operators_in_try =temp[27]
+    t_operators_in_try =d[27]
    
-    n_operators_count_in_try =temp[28]
+    n_operators_count_in_try =d[28]
     
-    t_variables_in_try =temp[29]
+    t_variables_in_try =d[29]
     
-    n_variables_count_try =temp[30]
+    n_variables_count_try =d[30]
     
-    t_method_call_names_till_try =temp[31]
+    t_method_call_names_till_try =d[31]
     
-    n_method_call_count_till_try =temp[32]
+    n_method_call_count_till_try =d[32]
     
-    t_operators_till_try  =temp[33]
+    t_operators_till_try  =d[33]
     
-    n_operators_count_till_try =temp[34]
+    n_operators_count_till_try =d[34]
     
-    t_variables_till_try =temp[35]
+    t_variables_till_try =d[35]
     
-    n_variables_count_till_try =temp[36] 
-    n_loc_till_try =temp[37]
-    n_is_till_try_logged =temp[38] 
-    n_till_try_log_count =temp[39]
+    n_variables_count_till_try =d[36] 
+    n_loc_till_try =d[37]
+    n_is_till_try_logged =d[38] 
+    n_till_try_log_count =d[39]
     
-    t_till_try_log_levels =temp[40]
+    t_till_try_log_levels =d[40]
     
-    n_is_return_till_try =temp[41]
-    n_throw_throws_till_try =temp[42]
-    n_if_in_till_try =temp[43]
-    n_if_count_in_till_try =temp[44] 
-    n_is_assert_till_try =temp[45]
+    n_is_return_till_try =d[41]
+    n_throw_throws_till_try =d[42]
+    n_if_in_till_try =d[43]
+    n_if_count_in_till_try =d[44] 
+    n_is_assert_till_try =d[45]
     
     
     temp.append( n_try_loc)
@@ -184,7 +189,6 @@ for d in data:
     temp.append(n_is_catch_object_ignore)
     temp.append(n_is_interrupted_exception)
     temp.append(n_is_thread_sleep_try) 
-    temp.append(n_is_throwable_exception)
     temp.append(n_throw_throws_try )
                              
     temp.append(n_throw_throws_catch)
@@ -249,7 +253,7 @@ for d in data:
     
     text_features =  text_features +" " + operator_string
     
-    text_features =  text_features.trim()
+    text_features =  text_features.strip()
  
     
       
@@ -281,7 +285,7 @@ str_non_logged = "select  catch_exc, package_name, class_name, method_name, try_
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0"
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 limit 0,"+ (str)(logged_catch_block_count)
    
 
 print "str_non_logged = ", str_non_logged
@@ -296,71 +300,71 @@ non_logged_catch_t_features = list()
 for d in data:
     temp = list()
     
-    t_catch_exc     = temp[0]
-    t_package_name  = temp[1]
-    t_class_name    = temp[2]
-    t_method_name   = temp[3]
+    t_catch_exc     = d[0]
+    t_package_name  = d[1]
+    t_class_name    = d[2]
+    t_method_name   = d[3]
  
-    n_try_loc       = temp[4]
-    n_is_try_logged = temp[5]
-    n_try_log_count  =temp[6]
+    n_try_loc       = d[4]
+    n_is_try_logged = d[5]
+    n_try_log_count  =d[6]
     
-    t_try_log_levels =  temp[7]
+    t_try_log_levels =  d[7]
     
-    n_have_previous_catches=temp[8]
-    n_previous_catches_logged =temp[9]
-    n_is_return_in_try =temp[10]                     
-    n_is_return_in_catch  =temp[11]
-    n_is_catch_object_ignore =temp[12]
-    n_is_interrupted_exception =temp[13]
-    n_is_thread_sleep_try =temp[14]
-    n_throw_throws_try =temp[15]                             
-    n_throw_throws_catch=temp[16]
-    n_if_in_try =temp[17]
-    n_if_count_in_try =temp[18]
-    n_is_assert_in_try =temp[19]
-    n_is_assert_in_catch =temp[20]
-    n_is_method_have_param =temp[21]
+    n_have_previous_catches=d[8]
+    n_previous_catches_logged =d[9]
+    n_is_return_in_try =d[10]                     
+    n_is_return_in_catch  =d[11]
+    n_is_catch_object_ignore =d[12]
+    n_is_interrupted_exception =d[13]
+    n_is_thread_sleep_try =d[14]
+    n_throw_throws_try =d[15]                             
+    n_throw_throws_catch=d[16]
+    n_if_in_try =d[17]
+    n_if_count_in_try =d[18]
+    n_is_assert_in_try =d[19]
+    n_is_assert_in_catch =d[20]
+    n_is_method_have_param =d[21]
     
-    t_method_param_type =temp[22]
-    t_method_param_name =temp[23]
+    t_method_param_type =d[22]
+    t_method_param_name =d[23]
    
-    n_method_param_count =temp[24]
+    n_method_param_count =d[24]
    
-    t_method_call_names_try =temp[25]
+    t_method_call_names_try =d[25]
     
-    n_method_call_count_try=temp[26]
+    n_method_call_count_try=d[26]
    
-    t_operators_in_try =temp[27]
+    t_operators_in_try =d[27]
    
-    n_operators_count_in_try =temp[28]
+    n_operators_count_in_try =d[28]
     
-    t_variables_in_try =temp[29]
+    t_variables_in_try =d[29]
     
-    n_variables_count_try =temp[30]
+    n_variables_count_try =d[30]
     
-    t_method_call_names_till_try =temp[31]
+    t_method_call_names_till_try =d[31]
     
-    n_method_call_count_till_try =temp[32]
+    n_method_call_count_till_try =d[32]
     
-    t_operators_till_try  =temp[33]
+    t_operators_till_try  =d[33]
     
-    n_operators_count_till_try =temp[34]
+    n_operators_count_till_try =d[34]
     
-    t_variables_till_try =temp[35]
+    t_variables_till_try =d[35]
     
-    n_variables_count_till_try =temp[36] 
-    n_loc_till_try =temp[37]
-    n_is_till_try_logged =temp[38] 
-    n_till_try_log_count =temp[39]
+    n_variables_count_till_try =d[36] 
+    n_loc_till_try =d[37]
+    n_is_till_try_logged =d[38] 
+    n_till_try_log_count =d[39]
     
-    t_till_try_log_levels =temp[40]
+    t_till_try_log_levels =d[40]
     
-    n_is_return_till_try =temp[41]
-    n_throw_throws_till_try =temp[42]
-    n_if_in_till_try =temp[43]
-    n_if_count_in_till_try =temp[44] 
-    n_is_assert_till_try =temp[45]
+    n_is_return_till_try =d[41]
+    n_throw_throws_till_try =d[42]
+    n_if_in_till_try =d[43]
+    n_if_count_in_till_try =d[44] 
+    n_is_assert_till_try =d[45]
     
     
     temp.append( n_try_loc)
@@ -374,7 +378,6 @@ for d in data:
     temp.append(n_is_catch_object_ignore)
     temp.append(n_is_interrupted_exception)
     temp.append(n_is_thread_sleep_try) 
-    temp.append(n_is_throwable_exception)
     temp.append(n_throw_throws_try )
                              
     temp.append(n_throw_throws_catch)
@@ -439,7 +442,7 @@ for d in data:
     
     text_features =  text_features +" " + operator_string
     
-    text_features =  text_features.trim()
+    text_features =  text_features.strip()
  
     
       
@@ -481,8 +484,42 @@ print total_data
 cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val)
 
-knn = KNeighborsClassifier(algorithm='auto', leaf_size=59, metric='minkowski',
-    n_neighbors=6, p=2, weights='uniform')
+
+#====1.  KNN algorithm====================#
+for temp_leaf_size in range(100):
+    for temp_nbr  in range(51):
+        print "Knn temp leaf size = ", temp_leaf_size+1, " Nbr =",temp_nbr+1
+
+        knn = KNeighborsClassifier(algorithm='auto', leaf_size=temp_leaf_size+1, metric='minkowski',
+                               n_neighbors=temp_nbr+1, p=2, weights='uniform')
+        #knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), np.asarray(target), cv=cv)
+        #print "knn = ", knn_score.mean()
+
+        knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), 
+                                            np.asarray(target), cv=cv)
+        knn_acc = cross_validation.cross_val_score(knn,np.asarray(total_data), 
+         np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
+        knn_precision = cross_validation.cross_val_score(knn,np.asarray(total_data), 
+              np.asarray(target), cv=cv,score_func=metrics.precision_score)
+        knn_recall = cross_validation.cross_val_score(knn,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.recall_score)
+        knn_f1= cross_validation.cross_val_score(knn,np.asarray(total_data), 
+            np.asarray(target), cv=cv,score_func=metrics.f1_score)
+        knn_roc = cross_validation.cross_val_score(knn,np.asarray(total_data),
+         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
+        print "knn =", knn_score.mean()
+        print "knn accuracy=", knn_acc.mean()
+        print "knn precision=", knn_precision.mean()
+        print "knn recall=", knn_recall.mean()
+        print "knn f1=", knn_f1.mean()
+        print "knn roc=", knn_roc.mean()
+       
+        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  "+ (str)(temp_leaf_size+1)+ "," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
+        "," + (str)(knn_recall.mean()) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc.mean())+")"
+        print "insert str = ",insert_knn_str
+        
+        
+    
 dt  =DecisionTreeClassifier(max_depth=5)
 gnb = GaussianNB() # Guasian Niave Bayes
 rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
@@ -544,27 +581,7 @@ total_ada_f1 = total_ada_f1 + ada_f1.mean()
 total_ada_roc = total_ada_roc +ada_roc.mean()
 """
 
-knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), np.asarray(target), cv=cv)
-print "knn = ", knn_score.mean()
 
-knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-                                            np.asarray(target), cv=cv)
-knn_acc = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-         np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-knn_precision = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-              np.asarray(target), cv=cv,score_func=metrics.precision_score)
-knn_recall = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.recall_score)
-knn_f1= cross_validation.cross_val_score(knn,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.f1_score)
-knn_roc = cross_validation.cross_val_score(knn,np.asarray(total_data),
-         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-print "knn =", knn_score.mean()
-print "knn accuracy=", knn_acc.mean()
-print "knn precision=", knn_precision.mean()
-print "knn recall=", knn_recall.mean()
-print "knn f1=", knn_f1.mean()
-print "knn roc=", knn_roc.mean()
 
 """
 total_knn_acc = total_knn_acc +knn_acc.mean()
