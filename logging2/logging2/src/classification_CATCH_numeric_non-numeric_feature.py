@@ -62,7 +62,7 @@ table_catch_feature = project+"catch_training2"
 #"""
 
 random_seed_val_cross_validation = 0
-random_seed_val_tuple_selection = 2
+random_seed_val_tuple_selection = 0
 #rand_array  = [0,1,2,3,4,5,6,7,8,9]
 
 db1= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
@@ -496,7 +496,7 @@ for temp_leaf_size in range(100):
         print "knn f1=", knn_f1.mean()
         print "knn roc=", knn_roc.mean()
        
-        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  "+ (str)(temp_leaf_size+1)+ "," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
+        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  "+ (str)(temp_leaf_size+1)+",'"+project+ "'," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
         "," + (str)(knn_recall.mean()) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc.mean())+")"
         print "insert str = ",insert_knn_str
         insert_cursor.execute(insert_knn_str)
@@ -530,7 +530,7 @@ for temp_max_depth in range(100):
         print "dt f1=", dt_f1.mean()
         print "dt roc=", dt_roc.mean()
 
-        insert_dt_str =  "insert into dt_catch_training2_results values( \"dt\",  "+ (str)(temp_max_depth+1)+ ", "+ (str)(dt_acc.mean()) + ", "+ (str)(dt_precision.mean())+ \
+        insert_dt_str =  "insert into dt_catch_training2_results values( \"dt\",  "+ (str)(temp_max_depth+1)+",'"+project+ "'," + (str)(dt_acc.mean()) + ", "+ (str)(dt_precision.mean())+ \
         "," + (str)(dt_recall.mean()) +","+ (str)(dt_f1.mean()) +","+ (str)(dt_roc.mean())+")"
         print "insert str = ",insert_dt_str
         insert_cursor.execute(insert_dt_str)
@@ -561,7 +561,7 @@ print "gnb f1=", gnb_f1.mean()
 print "gnb roc=", gnb_roc.mean()
 
 
-insert_gnb_str =  "insert into gnb_catch_training2_results values( \"gnb\",  "+  (str)(gnb_acc.mean()) + ", "+ (str)(gnb_precision.mean())+ \
+insert_gnb_str =  "insert into gnb_catch_training2_results values( \"gnb\",  "+  (str)(gnb_acc.mean()) +",'"+project+ "'," + (str)(gnb_precision.mean())+ \
         "," + (str)(gnb_recall.mean()) +","+ (str)(gnb_f1.mean()) +","+ (str)(gnb_roc.mean())+")"
 print "insert str = ",insert_gnb_str
 insert_cursor.execute(insert_gnb_str)
@@ -592,7 +592,7 @@ for temp_estimators in range(100):
     print "ada f1=",        ada_f1.mean()
     print "ada roc=",       ada_roc.mean()
     
-    insert_ada_str =   "insert into ada_catch_training2_results values( \"adaboost\",  "+ (str)(temp_estimators+1)+ ", "+ (str)(ada_acc.mean()) + ", "+ (str)(ada_precision.mean())+ \
+    insert_ada_str =   "insert into ada_catch_training2_results values( \"adaboost\",  "+ (str)(temp_estimators+1)+",'"+project+ "'," + (str)(ada_acc.mean()) + ", "+ (str)(ada_precision.mean())+ \
         "," + (str)(ada_recall.mean()) +","+ (str)(ada_f1.mean()) +","+ (str)(ada_roc.mean())+")"
     print "insert str = ",insert_ada_str
     insert_cursor.execute(insert_ada_str)
@@ -620,7 +620,7 @@ for temp_estimators in range (100):
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
    
    
-    insert_rf_str =   "insert into rf_catch_training2_results values( \"rf\",  "+ (str)(temp_estimators+1)+ ", "+ (str)(rf_acc.mean()) + ", "+ (str)(rf_precision.mean())+ \
+    insert_rf_str =   "insert into rf_catch_training2_results values( \"rf\",  "+ (str)(temp_estimators+1)+",'"+project+ "'," +(str)(rf_acc.mean()) + ", "+ (str)(rf_precision.mean())+ \
         "," + (str)(rf_recall.mean()) +","+ (str)(rf_f1.mean()) +","+ (str)(rf_roc.mean())+")"
     print "insert str = ",insert_rf_str
     insert_cursor.execute(insert_rf_str)
