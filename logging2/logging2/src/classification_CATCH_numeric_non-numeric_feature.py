@@ -478,18 +478,18 @@ for temp_leaf_size in range(100):
         #knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), np.asarray(target), cv=cv)
         #print "knn = ", knn_score.mean()
 
-        knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-                                            np.asarray(target), cv=cv)
-        knn_acc = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-         np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-        knn_precision = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-              np.asarray(target), cv=cv,score_func=metrics.precision_score)
-        knn_recall = cross_validation.cross_val_score(knn,np.asarray(total_data), 
-            np.asarray(target), cv=cv,score_func=metrics.recall_score)
+        knn_score = 0.0 #cross_validation.cross_val_score(knn,np.asarray(total_data), 
+                                            #np.asarray(target), cv=cv)
+        knn_acc= 0.0 #= cross_validation.cross_val_score(knn,np.asarray(total_data), 
+         #np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
+        knn_precision = 0.0 #cross_validation.cross_val_score(knn,np.asarray(total_data), 
+            #  np.asarray(target), cv=cv,score_func=metrics.precision_score)
+        knn_recall =0.0 # cross_validation.cross_val_score(knn,np.asarray(total_data), 
+           # np.asarray(target), cv=cv,score_func=metrics.recall_score)
         knn_f1= cross_validation.cross_val_score(knn,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-        knn_roc = cross_validation.cross_val_score(knn,np.asarray(total_data),
-         np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
+        knn_roc = 0.0# cross_validation.cross_val_score(knn,np.asarray(total_data),
+        # np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
         print "knn =", knn_score.mean()
         print "knn accuracy=", knn_acc.mean()
         print "knn precision=", knn_precision.mean()
