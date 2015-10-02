@@ -169,6 +169,9 @@ for d in logged_data:
     #t_class_name                
     #t_method_name                
                          
+    
+    operator_feature =  t_operators_till_if
+    
     text_features =      t_if_expr + " "+            t_till_if_log_levels   +" "                  +    t_variables_till_if +" "        +  t_method_call_names_till_if +" "+\
                          t_method_param_type + " " +  t_method_param_name +" " +  t_package_name+" "+ t_class_name + " "+ t_method_name         
     
@@ -176,7 +179,7 @@ for d in logged_data:
     text_features = utill.camel_case_convert(text_features)
     text_features = utill.stem_it(text_features)
     
-    operator_feature =  t_operators_till_if
+  
     
     text_features =  text_features +" " + operator_feature
     
@@ -359,6 +362,8 @@ for d in non_logged_data:
         temp.append(n_is_assert_till_try )
      
     
+        operator_string =  t_operators_in_try +" "+ t_operators_till_try
+        
         text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
                          t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
                          t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
@@ -368,7 +373,7 @@ for d in non_logged_data:
         text_features = utill.camel_case_convert(text_features)
         text_features = utill.stem_it(text_features)
     
-        operator_string =  t_operators_in_try +" "+ t_operators_till_try
+        
     
         text_features =  text_features +" " + operator_string
     
@@ -378,8 +383,8 @@ for d in non_logged_data:
       
         #Call a cleaning function
     
-        logged_catch_n_features.append(temp)     
-        logged_catch_t_features.append(text_features)
+        non_logged_catch_n_features.append(temp)     
+        non_logged_catch_t_features.append(text_features)
         target.append(0)                  
                       
 

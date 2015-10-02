@@ -440,8 +440,8 @@ for d in non_logged_data:
       
         #Call a cleaning function
     
-        logged_catch_n_features.append(temp)     
-        logged_catch_t_features.append(text_features)
+        non_logged_catch_n_features.append(temp)     
+        non_logged_catch_t_features.append(text_features)
         target.append(0)                  
                       
 
@@ -579,7 +579,7 @@ db1.commit()
 
 #===================Adaboost=================================#
 for temp_estimators in range(100):
-    print " temp estimators =" , temmp_estimators+1
+    print " temp estimators =" , temp_estimators+1
     ada =    AdaBoostClassifier(n_estimators=temp_estimators+1)
     ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
@@ -616,12 +616,12 @@ for temp_estimators in range(100):
 #rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
 
 for temp_estimators in range (100):
-    print  " temp estimators = ", temp_estimator+1
+    print  " temp estimators = ", temp_estimators+1
     rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
     
     rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    rf_accuracy = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+    rf_acc = cross_validation.cross_val_score(rf,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
     rf_precision = cross_validation.cross_val_score(rf,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
@@ -641,43 +641,3 @@ for temp_estimators in range (100):
 
  #"""
  
-
-svc =     SVC(kernel="linear", C=0.025)
-
-"""        
-total_dt_acc = total_dt_acc +dt_acc.mean()
-total_dt_precision = total_dt_precision +dt_precision.mean()
-total_dt_recall = total_dt_recall +dt_recall.mean()
-total_dt_f1 = total_dt_f1 + dt_f1.mean()
-total_dt_roc = total_dt_roc +dt_roc.mean()
-"""
-
-"""        
-total_ada_acc = total_ada_acc +ada_acc.mean()
-total_ada_precision = total_ada_precision +ada_precision.mean()
-total_ada_recall = total_ada_recall +ada_recall.mean()
-total_ada_f1 = total_ada_f1 + ada_f1.mean()
-total_ada_roc = total_ada_roc +ada_roc.mean()
-"""
-
-"""
-total_knn_acc = total_knn_acc +knn_acc.mean()
-total_knn_precision = total_knn_precision +knn_precision.mean()
-total_knn_recall = total_knn_recall +knn_recall.mean()
-total_knn_f1 = total_knn_f1 + knn_f1.mean()
-total_knn_roc = total_knn_roc +knn_roc.mean()
-""" 
-   
-"""
-total_gnb_acc = total_gnb_acc +gnb_acc.mean()
-total_gnb_precision = total_gnb_precision +gnb_precision.mean()
-total_gnb_recall = total_gnb_recall +gnb_recall.mean()
-total_gnb_f1 = total_gnb_f1 + gnb_f1.mean()
-total_gnb_roc = total_gnb_roc +gnb_roc.mean()
-"""
-
-
-  
-print "random forest acc= ", rf_acc.mean(), " f1=", rf_f1.mean(), "  rf-pre=", rf_pre.mean(), " rf-re=", rf_re.mean()     
-    #rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), np.asarray(target), cv=cv)
-    #print "rf = ", rf_score.mean() 
