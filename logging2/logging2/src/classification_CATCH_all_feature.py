@@ -47,7 +47,7 @@ project  = "tomcat_"
 
 
 
-#"""
+"""
 port=3306
 user="root"
 password="1234"
@@ -490,15 +490,16 @@ for temp_leaf_size in range(100):
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
         knn_roc = 0.0# cross_validation.cross_val_score(knn,np.asarray(total_data),
         # np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-        print "knn =", knn_score.mean()
-        print "knn accuracy=", knn_acc.mean()
-        print "knn precision=", knn_precision.mean()
-        print "knn recall=", knn_recall.mean()
+        
+        #print "knn =", knn_score.mean()
+        #print "knn accuracy=", knn_acc.mean()
+        #print "knn precision=", knn_precision.mean()
+        #print "knn recall=", knn_recall.mean()
         print "knn f1=", knn_f1.mean()
-        print "knn roc=", knn_roc.mean()
+        #print "knn roc=", knn_roc.mean()
        
-        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  '"+project+"',"+ (str)(temp_leaf_size+1)+"," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc.mean()) + ", "+ (str)(knn_precision.mean())+ \
-        "," + (str)(knn_recall.mean()) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc.mean())+")"
+        insert_knn_str  =  "insert into knn_catch_training2_results values( \"knn\",  '"+project+"',"+ (str)(temp_leaf_size+1)+"," + (str)(temp_nbr+1)+ ", "+ (str)(knn_acc) + ", "+ (str)(knn_precision)+ \
+        "," + (str)(knn_recall) +","+ (str)(knn_f1.mean()) +","+ (str)(knn_roc)+")"
         print "insert str = ",insert_knn_str
         insert_cursor.execute(insert_knn_str)
         db1.commit()
