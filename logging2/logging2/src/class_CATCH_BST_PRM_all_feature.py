@@ -44,18 +44,24 @@ import utill
 2. This file will report the average value of classifier
 ======================================================================================="""
 
-project  = "tomcat_"
-#project = "cloudstack_"
-
 #==Parameters========#
-knn_leaf_size  = 20
-knn_nbr  =5
+#"""
+project  = "tomcat_"
 
-dt_depth  =10
+knn_leaf_size  = 39
+knn_nbr  =1
+dt_depth  =11
+ada_estimators  =81
+rf_estimators  =91
 
-ada_estimators  =20
-rf_estimators  =30
-#=====================#
+"""
+#project = "cloudstack_"
+knn_leaf_size  = 39
+knn_nbr  =1
+dt_depth  =11
+ada_estimators  =81
+rf_estimators  =91
+#"""
 
 #"""
 port=3306
