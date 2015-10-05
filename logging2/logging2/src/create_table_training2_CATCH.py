@@ -487,6 +487,79 @@ print "[ICM]", "Total AVG IF count Till Try = ", total_if_count_till_try, " avg 
 
 
 """
+Result 19: % of catch have parameters in containing method have parameter
+"""
+
+total_catch_blocks_method_have_param_count=0
+total_catch_blocks_method_have_param_logged_catch=0
+total_catch_block_method_have_param_non_logged_catch=0
+
+str30 = "select count(*) from "+ catch_training_table +" where is_method_have_param = 1"
+#print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+    total_catch_blocks_method_have_param_count= d[0]
+    
+
+str30 = "select count(*) from "+ catch_training_table +" where is_method_have_param = 1  and is_catch_logged=1"
+#print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+    total_catch_blocks_method_have_param_logged_catch= d[0]
+
+str30 = "select count(*) from "+ catch_training_table +" where is_method_have_param = 1  and is_catch_logged=0"
+#print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+    total_catch_blocks_method_have_param_non_logged_catch= d[0]
+   
+print "[PM]=", "Total catch blocks method have param = ", total_catch_blocks_method_have_param_count, " count in logged catch=", total_catch_blocks_method_have_param_logged_catch,\
+                 "  count in non logged catch=", total_catch_blocks_method_have_param_non_logged_catch
+#print "ICTB%=", (if_count_in_try_logged_catch*100/logged_catch_count), "   Non Logged %=", (if_count_in_try_non_logged_catch*100/non_logged_catch_count)   
+
+
+"""
+Result 21: % of avg. number of parameters in containing method of catch blocks
+"""
+
+avg_param_count_method_have_param=0
+avg_param_count_method_have_param_logged_catch=0
+avg_param_count_method_have_param_non_logged_catch=0
+
+str30 = "select avg(method_param_count) from "+ catch_training_table +" where is_method_have_param = 1"
+#print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+   avg_param_count_method_have_paramt= d[0]
+    
+
+
+str30 = "select avg(method_param_count) from "+ catch_training_table +" where is_method_have_param = 1 and is_catch_logged = 1"
+print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+    avg_param_count_method_have_param_logged_catch= d[0]
+
+
+str30 = "select avg(method_param_count) from "+ catch_training_table +" where is_method_have_param = 1 and is_catch_logged = 0"
+print "str", str30
+select_cursor.execute(str30)
+data30 = select_cursor.fetchall()
+for d in data30:
+    avg_param_count_method_have_param_non_logged_catch= d[0]
+  
+print "[PCM]=", "Avg container method param count = ", avg_param_count_method_have_paramt, " avg  in logged catch=",  avg_param_count_method_have_param_logged_catch,\
+                 "  avg in non logged catch=", avg_param_count_method_have_param_non_logged_catch
+#print "ICTB%=", (if_count_in_try_logged_catch*100/logged_catch_count), "   Non Logged %=", (if_count_in_try_non_logged_catch*100/non_logged_catch_count)   
+
+
+
+"""
 @Result 19: % of catch blocks having "Throw/throws"  Try Block Vs. logged and Non-logged catch
 """
 total_throw_throws_try=0
