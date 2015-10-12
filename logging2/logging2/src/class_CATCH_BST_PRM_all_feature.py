@@ -1,10 +1,6 @@
 
 
 
-#===========================================================================#
-##==========This file wiil be used for classification======================##
-# EXPR uses only the exception of the catch condition for classification
-#==========================================================================##
 import numpy as np
 import pylab
 import matplotlib
@@ -41,7 +37,7 @@ import utill
 """=================================================================================================
 @Uses: This file will be used to create classifier using numeric and non-numeric features 
 1. This file will use best parameters used in the classifier
-2. This file will report the average value of classifier
+2. This file will report the average value of classifier 10 runs
 ======================================================================================="""
 
 #==Parameters========#

@@ -1,10 +1,5 @@
 
 
-
-#===========================================================================#
-##==========This file wiil be used for classification======================##
-# This file uses only textual features                                       #
-#==========================================================================##
 import numpy as np
 import pylab
 import matplotlib
@@ -41,7 +36,7 @@ import utill
 """=================================================================================================
 @Uses: This file will be used to create classifier using numeric and non-numeric features 
 1. This file will use best parameters used in the classifier
-2. This file will report the average value of classifier over 10 runs
+2. This file will report the average value of classifier 10 runs
 ======================================================================================="""
 
 #==Parameters========#
@@ -55,7 +50,7 @@ ada_estimators  =81
 rf_estimators  =91
 
 """
-project = "cloudstack_"
+#project = "cloudstack_"
 knn_leaf_size  = 39
 knn_nbr  =1
 dt_depth  =11
@@ -63,20 +58,20 @@ ada_estimators  =81
 rf_estimators  =91
 #"""
 
-"""
+#"""
 port=3306
 user="root"
 password="1234"
 database="logging_level2"
 table_catch_feature =project+ "catch_training2"
-final_result_table = "final_result_table_catch_training2_textual_features"
+final_result_table = "final_result_table_catch_training2_numeric_features"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging_level2"
 table_catch_feature = project+"catch_training2"
-final_result_table = "final_result_table_catch_training2_textual_features"
+final_result_table = "final_result_table_catch_training2_numeric_features"
 #"""
 
 random_seed_val_cross_validation = 0
@@ -117,60 +112,43 @@ logged_catch_t_features = list()
 
 
 for d in logged_data:
-    temp = list()
-       
-    t_catch_exc     = d[0]
-    t_package_name  = d[1]
-    t_class_name    = d[2]
-    t_method_name   = d[3]
-  
-    t_try_log_levels =  d[7]
+    temp = list()     
     
-    t_method_param_type =d[22]
-    t_method_param_name =d[23]
-    
-    t_method_call_names_try =d[25]
-       
-    t_operators_in_try =d[27]
-       
-    t_variables_in_try =d[29]
-        
-    t_method_call_names_till_try =d[31]
-        
-    t_operators_till_try  =d[33]
-        
-    t_variables_till_try =d[35]
-     
-    t_till_try_log_levels =d[40]
-         
-    text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
-                         t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
-                         t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
-                         t_till_try_log_levels
-    
-    #Applying camel casing
-    text_features = utill.camel_case_convert(text_features)
-    text_features = utill.stem_it(text_features)
-    
-    operator_string =  t_operators_in_try +" "+ t_operators_till_try
-    
-    text_features =  text_features +" " + operator_string
-    
-    text_features =  text_features.strip()
  
-    
+    n_try_loc       = d[4]    
+    n_try_log_count  =d[6]  
+    n_if_count_in_try     =d[18]    
+    n_method_param_count =d[24]    
+    n_method_call_count_try=d[26]    
+    n_operators_count_in_try =d[28]    
+    n_variables_count_try =d[30]    
+    n_method_call_count_till_try =d[32]    
+    n_operators_count_till_try =d[34]    
+    n_variables_count_till_try =d[36] 
+    n_loc_till_try =d[37]
+    n_till_try_log_count =d[39]  
+    n_if_count_in_till_try =d[44] 
+        
+    temp.append( n_try_loc)
+    temp.append( n_try_log_count)  
+    temp.append( n_if_count_in_try)        
+    temp.append(n_method_param_count )       
+    temp.append(n_method_call_count_try)   
+    temp.append(n_operators_count_in_try)   
+    temp.append(n_variables_count_try )    
+    temp.append(n_method_call_count_till_try)    
+    temp.append(n_operators_count_till_try )    
+    temp.append(n_variables_count_till_try )
+    temp.append(n_loc_till_try )
+    temp.append(n_till_try_log_count )
+    temp.append(n_if_count_in_till_try) 
       
-    #Call a cleaning function
-    
-   # logged_catch_n_features.append(temp)     
-    logged_catch_t_features.append(text_features)
+    logged_catch_n_features.append(temp)     
     target.append(1)                  
 
 #====Inserting for negative class======#
-for i  in range(len(logged_catch_t_features)):
+for i  in range(len(logged_catch_n_features)):
     target.append(0)
-    
-print "len=", len(logged_catch_t_features)    , "targte= ", len(target)
 
 total_knn_acc = 0.0
 total_knn_precision = 0.0
@@ -220,14 +198,14 @@ non_logged_data = select_cursor.fetchall()
 
 
 
-rand_array = [0,1,2,3,4,5,6,7,8,9]
+rand_array = [0]#,1,2,3,4,5,6,7,8,9]
 for  random_seed_val_cross_validation in rand_array:
     
     np.random.seed(random_seed_val_tuple_selection)
     indices = list()
-    indices = np.random.permutation(len(non_logged_data))[:len(logged_catch_t_features)]
+    indices = np.random.permutation(len(non_logged_data))[:len(logged_catch_n_features)]
 
-    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_t_features)
+    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_n_features)
 
     non_logged_catch_n_features = list()
     non_logged_catch_t_features = list()
@@ -240,64 +218,53 @@ for  random_seed_val_cross_validation in rand_array:
         #print "I am here"
         if valid_index in indices:   
             temp = list()
-    
-            t_catch_exc     = d[0]
-            t_package_name  = d[1]
-            t_class_name    = d[2]
-            t_method_name   = d[3]
      
-            t_try_log_levels =  d[7]    
-              
-            t_method_param_type =d[22]
-            t_method_param_name =d[23]   
-              
-            t_method_call_names_try =d[25]       
-            t_operators_in_try =d[27]            
-    
-            t_variables_in_try =d[29]   
-          
-            t_method_call_names_till_try =d[31]    
-    
-            t_operators_till_try  =d[33]
-    
-            t_variables_till_try =d[35]
-    
-            t_till_try_log_levels =d[40]
-    
-    
-            text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
-                         t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
-                         t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
-                         t_till_try_log_levels
-    
-            #Applying camel casing
-            text_features = utill.camel_case_convert(text_features)
-            text_features = utill.stem_it(text_features)
-    
-            operator_string =  t_operators_in_try +" "+ t_operators_till_try
-    
-            text_features =  text_features +" " + operator_string
-    
-            text_features =  text_features.strip() 
+            n_try_loc       = d[4]    
+            n_try_log_count  =d[6]  
+            n_if_count_in_try     =d[18]    
+            n_method_param_count =d[24]    
+            n_method_call_count_try=d[26]    
+            n_operators_count_in_try =d[28]    
+            n_variables_count_try =d[30]    
+            n_method_call_count_till_try =d[32]    
+            n_operators_count_till_try =d[34]    
+            n_variables_count_till_try =d[36] 
+            n_loc_till_try =d[37]
+            n_till_try_log_count =d[39]
+            n_if_count_in_till_try =d[44]   
         
-            non_logged_catch_t_features.append(text_features)
+            temp.append( n_try_loc)
+            temp.append( n_try_log_count)  
+            temp.append( n_if_count_in_try)        
+            temp.append(n_method_param_count )       
+            temp.append(n_method_call_count_try)   
+            temp.append(n_operators_count_in_try)   
+            temp.append(n_variables_count_try )    
+            temp.append(n_method_call_count_till_try)    
+            temp.append(n_operators_count_till_try )    
+            temp.append(n_variables_count_till_try )
+            temp.append(n_loc_till_try )
+            temp.append(n_till_try_log_count )
+            temp.append(n_if_count_in_till_try)     
             
-            #target.append(0)  Removing from here moving up                  
+    
+            non_logged_catch_n_features.append(temp)                
                       
 
 
     #=======================================
-    total_catch_t_features =  logged_catch_t_features + non_logged_catch_t_features
-    print "len of features=", len(total_catch_t_features)
+    vectorizer = TfidfVectorizer(min_df=1)
     
-    vectorizer = TfidfVectorizer(min_df=1)   
-    total_data =vectorizer.fit_transform(np.asarray(total_catch_t_features))
-   
+    total_data =  logged_catch_n_features  +  non_logged_catch_n_features
+    
+   # print total_data.shape
 
-
-    print total_data
-    #print  " target", target
-
+    
+    #=======================================
+ 
+    #========================================================= 
+    #total_data = logged_catch_data   + non_logged_catch_data
+    #=========================================================
 
     cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val_cross_validation)
@@ -308,19 +275,18 @@ for  random_seed_val_cross_validation in rand_array:
     knn = KNeighborsClassifier(algorithm='auto', leaf_size=temp_leaf_size+1, metric='minkowski',
                                n_neighbors=temp_nbr+1, p=2, weights='uniform')
   
-    knn_score = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    knn_acc = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_acc = cross_validation.cross_val_score(knn,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    knn_precision = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_precision = cross_validation.cross_val_score(knn,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    knn_recall = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_recall = cross_validation.cross_val_score(knn,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    knn_f1= cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_f1= cross_validation.cross_val_score(knn,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    knn_roc = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_roc = cross_validation.cross_val_score(knn,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-    
     print "knn =", knn_score.mean()
     print "knn accuracy=", knn_acc.mean()
     print "knn precision=", knn_precision.mean()
@@ -341,17 +307,17 @@ for  random_seed_val_cross_validation in rand_array:
     temp_max_depth  = dt_depth   
     dt  =DecisionTreeClassifier(max_depth= temp_max_depth+1)
         
-    dt_score = cross_validation.cross_val_score(dt,total_data.toarray(), 
+    dt_score = cross_validation.cross_val_score(dt,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    dt_acc = cross_validation.cross_val_score(dt,total_data.toarray(), 
+    dt_acc = cross_validation.cross_val_score(dt,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    dt_precision = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_precision = cross_validation.cross_val_score(dt,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    dt_recall = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_recall = cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    dt_f1= cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_f1= cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    dt_roc = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_roc = cross_validation.cross_val_score(dt,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
         
     print "dt =", dt_score.mean()
@@ -371,17 +337,17 @@ for  random_seed_val_cross_validation in rand_array:
 #========= GnB===================================================#        
     gnb = GaussianNB() # Guasian Niave Bayes
     
-    gnb_score = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_score = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    gnb_acc = cross_validation.cross_val_score(gnb, total_data.toarray(),
+    gnb_acc = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
       np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    gnb_precision = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_precision = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    gnb_recall = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_recall = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    gnb_f1= cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_f1= cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    gnb_roc = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_roc = cross_validation.cross_val_score(gnb,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
     print "gnb =", gnb_score.mean()
     print "gnb accuracy=", gnb_acc.mean()
@@ -402,17 +368,17 @@ for  random_seed_val_cross_validation in rand_array:
     temp_estimators  =  ada_estimators
   
     ada =    AdaBoostClassifier(n_estimators=temp_estimators+1)
-    ada_score = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    ada_acc = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_acc = cross_validation.cross_val_score(ada,np.asarray(total_data), 
        np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    ada_precision = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_precision = cross_validation.cross_val_score(ada,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    ada_recall = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_recall = cross_validation.cross_val_score(ada,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    ada_f1= cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_f1= cross_validation.cross_val_score(ada,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    ada_roc = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_roc = cross_validation.cross_val_score(ada,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
     
     print "ada =",          ada_score.mean()
@@ -436,17 +402,17 @@ for  random_seed_val_cross_validation in rand_array:
    
     rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
     
-    rf_score = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    rf_acc = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_acc = cross_validation.cross_val_score(rf,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    rf_precision = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_precision = cross_validation.cross_val_score(rf,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    rf_recall = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_recall = cross_validation.cross_val_score(rf,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    rf_f1= cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_f1= cross_validation.cross_val_score(rf,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    rf_roc = cross_validation.cross_val_score(rf, total_data.toarray(),
+    rf_roc = cross_validation.cross_val_score(rf,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
    
     total_rf_acc =        total_rf_acc          + rf_acc.mean()
