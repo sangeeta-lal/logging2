@@ -51,9 +51,9 @@ temp_p.append(32)
 temp_p.append(26)  
 
 text_p_features = list()
-text_p_features.append("wind")
+text_p_features.append("rain rain")
 text_p_features.append("rain")
-text_p_features.append("wind")
+text_p_features.append("rain wind")
 text_p_features.append("rain")
 
 target.append(0)
@@ -68,32 +68,33 @@ temp_n.append(25)
 temp_n.append(32)  
 
 text_n_features = list()
+text_n_features.append("wind wind")
 text_n_features.append("wind")
-text_n_features.append("rain")
 text_n_features.append("wind")
-text_n_features.append("rain")
+text_n_features.append("wind wind ")
 
 print temp_p,  " tempn = ", temp_n
 print "text p = ", text_p_features,  "  text n = ", text_n_features
 
 total_text = text_p_features + text_n_features
+
+
 print "total text = ", total_text
 vectorizer = TfidfVectorizer(min_df=1)
-total_text_features=vectorizer.fit_transform(total_text)
-print "shape of the feature", total_text_features.shape
-print "total_text_features=", total_text_features
-
-
-total_temp =  temp_p + temp_n
-print "total numeric= ", total_temp
-total_numerical_features = np.asarray(total_temp)
-
-print "total numerical features=", total_numerical_features
-print " temp shape=",  total_numerical_features.shape
-
-total_data = np.hstack([total_text_features.toarray(), total_numerical_features]) 
-#total_data = np.column_stack([total_text_features.toarray(), total_numerical_features])
+total_data =  vectorizer.fit_transform( np.asarray(total_text))
 print total_data
+
+"""
+ x_data_tfidf=vectorizer.fit_transform( np.asarray(temp_total_data))
+     target_arr = np.asarray(target)
+     
+     print "total_data", temp_total_data
+     print "Tf-idf= ", x_data_tfidf.toarray()
+     
+     n_samples = x_data_tfidf.shape[0]
+     cv = cross_validation.ShuffleSplit(n_samples, n_iter=10, test_size=0.3, random_state=0)
+    
+"""
 
 
 """
@@ -121,17 +122,17 @@ rf =  RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1),
 ada =    AdaBoostClassifier(n_estimators=100)
 svc =     SVC(kernel="linear", C=0.025)
 
-dt_score = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+dt_score = cross_validation.cross_val_score(dt,total_data.toarray(),
                                             np.asarray(target), cv=cv)
-dt_acc = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+dt_acc = cross_validation.cross_val_score(dt,total_data.toarray(),
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-dt_precision = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+dt_precision = cross_validation.cross_val_score(dt,total_data.toarray(),
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-dt_recall = cross_validation.cross_val_score(dt,np.asarray(total_data), 
+dt_recall = cross_validation.cross_val_score(dt,total_data.toarray(),
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-dt_f1= cross_validation.cross_val_score(dt,np.asarray(total_data), 
+dt_f1= cross_validation.cross_val_score(dt,total_data.toarray(),
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-dt_roc = cross_validation.cross_val_score(dt,np.asarray(total_data),
+dt_roc = cross_validation.cross_val_score(dt,total_data.toarray(),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
 print "dt =", dt_score.mean()
 print "dt accuracy =", dt_acc.mean()

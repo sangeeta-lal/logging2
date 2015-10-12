@@ -7,7 +7,7 @@
 
 #===========================================================================#
 ##==========This file wiil be used for classification======================##
-# EXPR uses only the exception of the catch condition for classification
+# This file will be used to find bestpaeamerters using all the features     #
 #==========================================================================##
 import numpy as np
 import pylab

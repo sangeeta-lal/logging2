@@ -307,8 +307,7 @@ public void methodVisitor(String content)
         	
         	String method_if_between_con = " " ;    	    
         	util_met utm =  new util_met();
-        	
-        	
+        	        	
         	//Contextualfeaturess                
         	is_method_have_param = utm.check_method_parameter (method_parameter);
         	method_param_as_string_original = method_parameter.toString();
@@ -495,7 +494,6 @@ public void reset_if_flags()
 }
 	
 
-
 public void insert(String if_block, String if_expr, String method_if_between_con, int loc_till_if,int is_till_if_logged, int till_if_log_count, String till_if_log_levels, String  operators_till_if,
 		int operators_count_till_if,  String variables_till_if, int variables_count_till_if,  String method_call_names_till_if, int method_call_count_till_if, int is_return_till_if, 
 		int throw_throws_till_if, int if_in_till_if, 	int if_count_in_till_if, 	int is_assert_till_if, int is_method_have_param, String method_param_as_string_original, String method_param_as_string, 
@@ -540,7 +538,7 @@ public void insert(String if_block, String if_expr, String method_if_between_con
     	}
 }
 
-public void write_in_file(String if_block, String if_expr, String if_train_con,  String method_content, int log_count)
+public void write_in_file(String if_block, String if_expr, String method_if_between_con,  String method_content, int log_count)
 {
     BufferedWriter bw = null;
     int logged= 0;
@@ -583,7 +581,7 @@ public void write_in_file(String if_block, String if_expr, String if_train_con, 
     	bw.write("Package Name ="+package_name+"\n");
     	bw.write("class name="+class_name+"\n");
     	bw.write("Method Name="+method_name+"\n");
-    	bw.write("If Content="+ if_train_con+"\n");
+    	bw.write("method If between Content="+ method_if_between_con+"\n");
     	//bw.write("All Catch Blocks="+ all_catch_as_string+"\n");
         //bw.write("method parameter = "+ method_parameter +"\n");
     	bw.write("method content="  +method_content+"\n");
