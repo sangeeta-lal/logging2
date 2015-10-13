@@ -254,7 +254,7 @@ for d in logged_data:
     target.append(1)                  
 
 
-#Read if blocks which are logged
+#Read if blocks which are non logged
 str_non_logged = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
                       is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
                        throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
@@ -262,8 +262,9 @@ str_non_logged = "select  catch_exc, package_name, class_name, method_name, try_
                       method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
                       method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
                       variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 "#limit 0,"+ (str)(logged_catch_block_count)
+                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0"
    
+
 
 print "str_non_logged = ", str_non_logged
 select_cursor.execute(str_non_logged)
