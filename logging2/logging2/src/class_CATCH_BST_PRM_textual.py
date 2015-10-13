@@ -295,7 +295,7 @@ for  random_seed_val_cross_validation in rand_array:
    
 
 
-    print total_data
+    #print total_data
     #print  " target", target
 
 
