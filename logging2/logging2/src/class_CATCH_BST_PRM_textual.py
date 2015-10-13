@@ -63,7 +63,7 @@ ada_estimators  =81
 rf_estimators  =91
 #"""
 
-"""
+#"""
 port=3306
 user="root"
 password="1234"
@@ -85,7 +85,7 @@ random_seed_val_tuple_selection = 0
 
 db1= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
 select_cursor = db1.cursor()
-insert_cursor  =db1.cursor()
+
 
 
 #Read if blocks which are logged
@@ -487,6 +487,12 @@ total_rf_f1 =         (total_rf_f1 *100)/10
 total_rf_roc =        (total_rf_roc*100)/10
 
 
+#===========To handle mysql gone away==============#
+
+db2= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
+insert_cursor  =db2.cursor()
+
+
 param ="knn leaf size ="+(str)(knn_leaf_size)+"  knn nbr="+(str)(knn_nbr)
 insert_knn_str =   "insert into  " +final_result_table+" values( \"knn\", '"+project+ "','" +param+"',"+(str)(total_knn_acc.mean()) + ", "+ (str)(total_knn_precision.mean())+ \
         "," + (str)(total_knn_recall.mean()) +","+ (str)(total_knn_f1.mean()) +","+ (str)(total_knn_roc.mean())+")"
@@ -517,7 +523,7 @@ insert_gnb_str =   "insert into  " +final_result_table+" values( \"gnb\", '"+pro
 print "insert str = ",insert_gnb_str
 insert_cursor.execute(insert_gnb_str)
 
-db1.commit()
+db2.commit()
 
 
 
