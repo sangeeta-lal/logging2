@@ -1,5 +1,6 @@
 
 
+
 import numpy as np
 import pylab
 import matplotlib
@@ -34,7 +35,7 @@ import utill
 
 
 """=================================================================================================
-@Uses: This file will be used to create classifier using numeric and non-numeric features 
+@Uses: This file will be used to create classifier using boolean features 
 1. This file will use best parameters used in the classifier
 2. This file will report the average value of classifier 10 runs
 ======================================================================================="""
@@ -50,7 +51,7 @@ ada_estimators  =81
 rf_estimators  =91
 
 """
-#project = "cloudstack_"
+project = "cloudstack_"
 knn_leaf_size  = 39
 knn_nbr  =1
 dt_depth  =11
@@ -64,14 +65,14 @@ user="root"
 password="1234"
 database="logging_level2"
 table_catch_feature =project+ "catch_training2"
-final_result_table = "final_result_table_catch_training2_numeric_features"
+final_result_table = "final_result_table_catch_training2_boolean_features"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging_level2"
 table_catch_feature = project+"catch_training2"
-final_result_table = "final_result_table_catch_training2_numeric_features"
+final_result_table = "final_result_table_catch_training2_boolean_features"
 #"""
 
 random_seed_val_cross_validation = 0
@@ -112,37 +113,50 @@ logged_catch_t_features = list()
 
 
 for d in logged_data:
-    temp = list()     
+    temp = list()
+       
     
- 
-    n_try_loc       = d[4]    
-    n_try_log_count  =d[6]  
-    n_if_count_in_try     =d[18]    
-    n_method_param_count =d[24]    
-    n_method_call_count_try=d[26]    
-    n_operators_count_in_try =d[28]    
-    n_variables_count_try =d[30]    
-    n_method_call_count_till_try =d[32]    
-    n_operators_count_till_try =d[34]    
-    n_variables_count_till_try =d[36] 
-    n_loc_till_try =d[37]
-    n_till_try_log_count =d[39]  
-    n_if_count_in_till_try =d[44] 
-        
-    temp.append( n_try_loc)
-    temp.append( n_try_log_count)  
-    temp.append( n_if_count_in_try)        
-    temp.append(n_method_param_count )       
-    temp.append(n_method_call_count_try)   
-    temp.append(n_operators_count_in_try)   
-    temp.append(n_variables_count_try )    
-    temp.append(n_method_call_count_till_try)    
-    temp.append(n_operators_count_till_try )    
-    temp.append(n_variables_count_till_try )
-    temp.append(n_loc_till_try )
-    temp.append(n_till_try_log_count )
-    temp.append(n_if_count_in_till_try) 
-      
+    n_is_try_logged = d[5]      
+    n_have_previous_catches   =d[8]
+    n_previous_catches_logged =d[9]
+    n_is_return_in_try        =d[10]                     
+    n_is_return_in_catch       =d[11]
+    n_is_catch_object_ignore   =d[12]
+    n_is_interrupted_exception  =d[13]
+    n_is_thread_sleep_try      =d[14]
+    n_throw_throws_try          =d[15]                             
+    n_throw_throws_catch     =d[16]
+    n_if_in_try           =d[17]
+    n_is_assert_in_try    =d[19]
+    n_is_assert_in_catch  =d[20]
+    n_is_method_have_param =d[21]   
+    n_is_till_try_logged =d[38]      
+    n_is_return_till_try =d[41]
+    n_throw_throws_till_try =d[42]
+    n_if_in_till_try =d[43]
+    n_is_assert_till_try =d[45]
+    
+     
+    temp.append(n_is_try_logged )
+    temp.append( n_have_previous_catches)
+    temp.append(n_previous_catches_logged)
+    temp.append( n_is_return_in_try)                            
+    temp.append( n_is_return_in_catch )
+    temp.append(n_is_catch_object_ignore)
+    temp.append(n_is_interrupted_exception)
+    temp.append(n_is_thread_sleep_try) 
+    temp.append(n_throw_throws_try )                             
+    temp.append(n_throw_throws_catch)
+    temp.append(n_if_in_try)
+    temp.append(n_is_assert_in_try) 
+    temp.append(n_is_assert_in_catch)
+    temp.append(n_is_method_have_param)
+    temp.append(n_is_till_try_logged )
+    temp.append(n_is_return_till_try)
+    temp.append(n_throw_throws_till_try)
+    temp.append(n_if_in_till_try)
+    temp.append(n_is_assert_till_try )
+    
     logged_catch_n_features.append(temp)     
     target.append(1)                  
 
@@ -218,46 +232,53 @@ for  random_seed_val_cross_validation in rand_array:
         #print "I am here"
         if valid_index in indices:   
             temp = list()
-     
-            n_try_loc       = d[4]    
-            n_try_log_count  =d[6]  
-            n_if_count_in_try     =d[18]    
-            n_method_param_count =d[24]    
-            n_method_call_count_try=d[26]    
-            n_operators_count_in_try =d[28]    
-            n_variables_count_try =d[30]    
-            n_method_call_count_till_try =d[32]    
-            n_operators_count_till_try =d[34]    
-            n_variables_count_till_try =d[36] 
-            n_loc_till_try =d[37]
-            n_till_try_log_count =d[39]
-            n_if_count_in_till_try =d[44]   
-        
-            temp.append( n_try_loc)
-            temp.append( n_try_log_count)  
-            temp.append( n_if_count_in_try)        
-            temp.append(n_method_param_count )       
-            temp.append(n_method_call_count_try)   
-            temp.append(n_operators_count_in_try)   
-            temp.append(n_variables_count_try )    
-            temp.append(n_method_call_count_till_try)    
-            temp.append(n_operators_count_till_try )    
-            temp.append(n_variables_count_till_try )
-            temp.append(n_loc_till_try )
-            temp.append(n_till_try_log_count )
-            temp.append(n_if_count_in_till_try)     
-            
     
-            non_logged_catch_n_features.append(temp)                
-                      
-
-
+            n_is_try_logged = d[5]      
+            n_have_previous_catches   =d[8]
+            n_previous_catches_logged =d[9]
+            n_is_return_in_try        =d[10]                     
+            n_is_return_in_catch       =d[11]
+            n_is_catch_object_ignore   =d[12]
+            n_is_interrupted_exception  =d[13]
+            n_is_thread_sleep_try      =d[14]
+            n_throw_throws_try          =d[15]                             
+            n_throw_throws_catch     =d[16]
+            n_if_in_try           =d[17]
+            n_is_assert_in_try    =d[19]
+            n_is_assert_in_catch  =d[20]
+            n_is_method_have_param =d[21]   
+            n_is_till_try_logged =d[38]      
+            n_is_return_till_try =d[41]
+            n_throw_throws_till_try =d[42]
+            n_if_in_till_try =d[43]
+            n_is_assert_till_try =d[45]
+    
+     
+            temp.append(n_is_try_logged )
+            temp.append( n_have_previous_catches)
+            temp.append(n_previous_catches_logged)
+            temp.append( n_is_return_in_try)                            
+            temp.append( n_is_return_in_catch )
+            temp.append(n_is_catch_object_ignore)
+            temp.append(n_is_interrupted_exception)
+            temp.append(n_is_thread_sleep_try) 
+            temp.append(n_throw_throws_try )                             
+            temp.append(n_throw_throws_catch)
+            temp.append(n_if_in_try)
+            temp.append(n_is_assert_in_try) 
+            temp.append(n_is_assert_in_catch)
+            temp.append(n_is_method_have_param)
+            temp.append(n_is_till_try_logged )
+            temp.append(n_is_return_till_try)
+            temp.append(n_throw_throws_till_try)
+            temp.append(n_if_in_till_try)
+            temp.append(n_is_assert_till_try )
+    
+            non_logged_catch_n_features.append(temp)     
+            
     #=======================================
     vectorizer = TfidfVectorizer(min_df=1)    
     total_data =  logged_catch_n_features  +  non_logged_catch_n_features
-    
-   # print total_data.shape
-
     
     #=======================================
  
