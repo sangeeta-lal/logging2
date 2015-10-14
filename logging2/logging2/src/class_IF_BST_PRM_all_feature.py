@@ -64,14 +64,14 @@ port=3306
 user="root"
 password="1234"
 database="logging_level2"
-table_catch_feature =project+ "if_training2"
+table_if_feature =project+ "if_training2"
 final_result_table = "final_result_table_if_training2_all_features"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging_level2"
-table_catch_feature = project+"if_training2"
+table_if_feature = project+"if_training2"
 final_result_table = "final_result_table_if_training2_all_features"
 #"""
 
@@ -207,7 +207,7 @@ for d in logged_data:
     target.append(1)                  
 
 #====Inserting for negative class======#
-for i  in range(len(logged_catch_n_features)):
+for i  in range(len(logged_if_n_features)):
     target.append(0)
 
 total_knn_acc = 0.0
@@ -242,14 +242,15 @@ total_rf_roc = 0.0
 
 
 #Read if blocks which are logged
-str_non_logged = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                       throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      is_method_have_param, method_param_type, method_param_name, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
-                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 "#limit 0,"+ (str)(logged_catch_block_count)
+str_non_logged = "select  if_expr, loc_till_if, is_till_if_logged, till_if_log_count, till_if_log_levels, operators_till_if, operators_count_till_if, variables_till_if,  \
+                       variables_count_till_if,method_call_names_till_if, method_call_count_till_if,  is_return_in_till_if, throw_throws_till_if, \
+                       if_in_till_if, if_count_in_till_if, is_assert_till_if, is_method_have_param,  method_param_type, method_param_name, method_param_count,\
+                       is_return_in_if, throw_throws_if, is_assert_if, is_null_condition_if, is_instance_of_condition_if, package_name, class_name, method_name\
+                       from "+ table_if_feature +" where if_expr not like '%isTraceEnabled()'  and \
+                       if_expr not like '%isDebugEnabled()'  and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'  \
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and  is_if_logged= 0"
+   
+   
    
 
 print "str_non_logged = ", str_non_logged
@@ -263,12 +264,12 @@ for  random_seed_val_cross_validation in rand_array:
     
     np.random.seed(random_seed_val_tuple_selection)
     indices = list()
-    indices = np.random.permutation(len(non_logged_data))[:len(logged_catch_n_features)]
+    indices = np.random.permutation(len(non_logged_data))[:len(logged_if_n_features)]
 
-    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_n_features)
+    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_if_n_features)
 
-    non_logged_catch_n_features = list()
-    non_logged_catch_t_features = list()
+    non_logged_if_n_features = list()
+    non_logged_if_t_features = list()
 
     valid_index=-1
 
@@ -279,156 +280,94 @@ for  random_seed_val_cross_validation in rand_array:
         if valid_index in indices:   
             temp = list()
     
-            t_catch_exc     = d[0]
-            t_package_name  = d[1]
-            t_class_name    = d[2]
-            t_method_name   = d[3]
- 
-            n_try_loc       = d[4]
-            n_is_try_logged = d[5]
-            n_try_log_count  =d[6]
-    
-            t_try_log_levels =  d[7]
-    
-            n_have_previous_catches=d[8]
-            n_previous_catches_logged =d[9]
-            n_is_return_in_try =d[10]                     
-            n_is_return_in_catch  =d[11]
-            n_is_catch_object_ignore =d[12]
-            n_is_interrupted_exception =d[13]
-            n_is_thread_sleep_try =d[14]
-            n_throw_throws_try =d[15]                             
-            n_throw_throws_catch=d[16]
-            n_if_in_try =d[17]
-            n_if_count_in_try =d[18]
-            n_is_assert_in_try =d[19]
-            n_is_assert_in_catch =d[20]
-            n_is_method_have_param =d[21]
-    
-            t_method_param_type =d[22]
-            t_method_param_name =d[23]
+            t_if_expr            = d[0]
+            n_loc_till_if          =  d[1]
+            n_is_till_if_logged   = d[2]
+            n_till_if_log_count   = d[3]
+            t_till_if_log_levels  =d[4]
+            t_operators_till_if   =d[5]
+            n_operators_count_till_if = d[6]
+            t_variables_till_if          = d[7]
+            n_variables_count_till_if    = d[8]
+            t_method_call_names_till_if   =d[9]
+            n_method_call_count_till_if   = d[10]
+            n_is_return_in_till_if        =d[11]
+            n_throw_throws_till_if        =d[12]
+            n_if_in_till_if               =d[13]
+            n_if_count_in_till_if         =d[14]
+            n_is_assert_till_if          =d[15]
+            n_is_method_have_param        =d[16] 
+            t_method_param_type          =d[17]
+            t_method_param_name         =d[18]
+            n_method_param_count        =d[19]
+            n_is_return_in_if           = d[20]
+            n_throw_throws_if          = d[21]
+            n_is_assert_if              =d[22]
+            n_is_null_condition_if          = d[23] 
+            n_is_instance_of_condition_if = d[24] 
+            t_package_name               =d[25]
+            t_class_name                =d[26]
+            t_method_name                =d[27]
+                       
    
-            n_method_param_count =d[24]
-   
-            t_method_call_names_try =d[25]
+            #t_if_expr      
+            temp.append(n_loc_till_if )    
+            temp.append(n_is_till_if_logged )  
+            temp.append(n_till_if_log_count )
     
-            n_method_call_count_try=d[26]
-   
-            t_operators_in_try =d[27]
-   
-            n_operators_count_in_try =d[28]
+            #t_till_if_log_levels  
+            #t_operators_till_if
     
-            t_variables_in_try =d[29]
+            temp.append(n_operators_count_till_if)
     
-            n_variables_count_try =d[30]
+            #t_variables_till_if )
     
-            t_method_call_names_till_try =d[31]
+            temp.append(n_variables_count_till_if)
     
-            n_method_call_count_till_try =d[32]
+            #t_method_call_names_till_if
     
-            t_operators_till_try  =d[33]
+            temp.append(n_method_call_count_till_if )
+            temp.append(n_is_return_in_till_if )
+            temp.append(n_throw_throws_till_if )
+            temp.append(n_if_in_till_if )
+            temp.append(n_if_count_in_till_if )
+            temp.append(n_is_assert_till_if )
+            temp.append(n_is_method_have_param )
     
-            n_operators_count_till_try =d[34]
+            #t_method_param_type          
+            #t_method_param_nam
     
-            t_variables_till_try =d[35]
-    
-            n_variables_count_till_try =d[36] 
-            n_loc_till_try =d[37]
-            n_is_till_try_logged =d[38] 
-            n_till_try_log_count =d[39]
-    
-            t_till_try_log_levels =d[40]
-    
-            n_is_return_till_try =d[41]
-            n_throw_throws_till_try =d[42]
-            n_if_in_till_try =d[43]
-            n_if_count_in_till_try =d[44] 
-            n_is_assert_till_try =d[45]
-    
-    
-            temp.append( n_try_loc)
-            temp.append(n_is_try_logged )
-            temp.append( n_try_log_count)  
-            temp.append( n_have_previous_catches)
-            temp.append(n_previous_catches_logged)
-            temp.append( n_is_return_in_try)
-                            
-            temp.append( n_is_return_in_catch )
-            temp.append(n_is_catch_object_ignore)
-            temp.append(n_is_interrupted_exception)
-            temp.append(n_is_thread_sleep_try) 
-            temp.append(n_throw_throws_try )
-                             
-            temp.append(n_throw_throws_catch)
-            temp.append(n_if_in_try )
-            temp.append( n_if_count_in_try) 
-            temp.append(n_is_assert_in_try) 
-            temp.append(n_is_assert_in_catch)
-            temp.append( n_is_method_have_param )
-    
-            #t_method_param_type =temp[22]
-            #t_method_param_name =temp[23]
-   
             temp.append(n_method_param_count )
-   
-            #t_method_call_names_try =temp[25]
+            temp.append(n_is_return_in_if)         
+            temp.append(n_throw_throws_if)         
+            temp.append(n_is_assert_if )           
+            temp.append(n_is_null_condition_if )          
+            temp.append(n_is_instance_of_condition_if) 
+            #t_package_name               
+            #t_class_name                
+            #t_method_name                
+                         
     
-            temp.append(n_method_call_count_try)
-   
-            # t_operators_in_try =temp[27]
-
-   
-            temp.append(n_operators_count_in_try )
+            operator_feature =  t_operators_till_if
     
-            # t_variables_in_try =temp[29]
-    
-            temp.append(n_variables_count_try )
-    
-            #t_method_call_names_till_try =temp[31]
-    
-            temp.append(n_method_call_count_till_try)
-    
-            #t_operators_till_try  =temp[33]
-    
-            temp.append(n_operators_count_till_try )
-    
-            #t_variables_till_try =temp[35]
-    
-            temp.append(n_variables_count_till_try )
-            temp.append(n_loc_till_try )
-            temp.append(n_is_till_try_logged )
-            temp.append(n_till_try_log_count )
-    
-            #t_till_try_log_levels =temp[40]
-    
-            temp.append(n_is_return_till_try)
-            temp.append(n_throw_throws_till_try)
-            temp.append(n_if_in_till_try)
-            temp.append(n_if_count_in_till_try) 
-            temp.append(n_is_assert_till_try )
-     
-    
-            text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
-                         t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
-                         t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
-                         t_till_try_log_levels
+            text_features =      t_if_expr + " "+            t_till_if_log_levels   +" "                  +    t_variables_till_if +" "        +  t_method_call_names_till_if +" "+\
+                         t_method_param_type + " " +  t_method_param_name +" " +  t_package_name+" "+ t_class_name + " "+ t_method_name         
     
             #Applying camel casing
             text_features = utill.camel_case_convert(text_features)
             text_features = utill.stem_it(text_features)
     
-            operator_string =  t_operators_in_try +" "+ t_operators_till_try
-    
-            text_features =  text_features +" " + operator_string
+            text_features =  text_features +" " + operator_feature
     
             text_features =  text_features.strip()
  
+            #Call a cleaning function
     
       
             #Call a cleaning function
     
-            non_logged_catch_n_features.append(temp)     
-            non_logged_catch_t_features.append(text_features)
+            non_logged_if_n_features.append(temp)     
+            non_logged_if_t_features.append(text_features)
             
             #target.append(0)  Removing from here moving up                  
                       
@@ -436,15 +375,15 @@ for  random_seed_val_cross_validation in rand_array:
 
     #=======================================
     vectorizer = TfidfVectorizer(min_df=1)
-    total_catch_t_features =  logged_catch_t_features + non_logged_catch_t_features
-    x_total_catch_t_features=vectorizer.fit_transform(total_catch_t_features)
-    print "shape of the feature", x_total_catch_t_features.shape
+    total_if_t_features =  logged_if_t_features + non_logged_if_t_features
+    x_total_if_t_features=vectorizer.fit_transform(total_if_t_features)
+    print "shape of the feature", x_total_if_t_features.shape
 
-    total_catch_n_features =  logged_catch_n_features  +  non_logged_catch_n_features
-    x_total_catch_n_features_array = np.asarray(total_catch_n_features)
-    print x_total_catch_n_features_array.shape
+    total_if_n_features =  logged_if_n_features  +  non_logged_if_n_features
+    x_total_if_n_features_array = np.asarray(total_if_n_features)
+    print x_total_if_n_features_array.shape
 
-    total_data = np.hstack([x_total_catch_t_features.toarray(), x_total_catch_n_features_array])
+    total_data = np.hstack([x_total_if_t_features.toarray(), x_total_if_n_features_array])
     print total_data
     #=======================================
  
