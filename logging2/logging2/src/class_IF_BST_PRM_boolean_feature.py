@@ -43,20 +43,19 @@ import utill
 #==Parameters========#
 #"""
 project  = "tomcat_"
-
-knn_leaf_size  = 39
-knn_nbr  =1
-dt_depth  =11
-ada_estimators  =81
-rf_estimators  =91
+knn_leaf_size  = 62
+knn_nbr  =3
+dt_depth  =86
+ada_estimators  =99
+rf_estimators  =82
 
 """
-project = "cloudstack_"
-knn_leaf_size  = 39
-knn_nbr  =1
-dt_depth  =11
-ada_estimators  =81
-rf_estimators  =91
+#project = "cloudstack_"
+knn_leaf_size  = 62
+knn_nbr  =3
+dt_depth  =86
+ada_estimators  =99
+rf_estimators  =82
 #"""
 
 #"""
