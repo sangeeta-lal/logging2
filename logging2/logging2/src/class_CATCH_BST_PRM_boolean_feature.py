@@ -222,7 +222,7 @@ for  random_seed_val_cross_validation in rand_array:
     print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_n_features)
 
     non_logged_catch_n_features = list()
-    non_logged_catch_t_features = list()
+    #non_logged_catch_t_features = list()
 
     valid_index=-1
 

@@ -1,10 +1,6 @@
 
 
 
-#===========================================================================#
-##==========This file wiil be used for classification======================##
-# This file uses only textual features                                       #
-#==========================================================================##
 import numpy as np
 import pylab
 import matplotlib
@@ -39,9 +35,9 @@ import utill
 
 
 """=================================================================================================
-@Uses: This file will be used to create classifier using numeric and non-numeric features 
+@Uses: This file will be used to create classifier using boolean features 
 1. This file will use best parameters used in the classifier
-2. This file will report the average value of classifier over 10 runs
+2. This file will report the average value of classifier 10 runs
 ======================================================================================="""
 
 #==Parameters========#
@@ -68,15 +64,15 @@ port=3306
 user="root"
 password="1234"
 database="logging_level2"
-table_catch_feature =project+ "catch_training2"
-final_result_table = "final_result_table_catch_training2_textual_features"
+table_if_feature =project+ "if_training2"
+final_result_table = "final_result_table_if_training2_numeric_features"
 """
 port=3307
 user="sangeetal"
 password="sangeetal"
 database="logging_level2"
-table_catch_feature = project+"catch_training2"
-final_result_table = "final_result_table_catch_training2_textual_features"
+table_if_feature = project+"if_training2"
+final_result_table = "final_result_table_if_training2_numeric_features"
 #"""
 
 random_seed_val_cross_validation = 0
@@ -85,20 +81,18 @@ random_seed_val_tuple_selection = 0
 
 db1= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
 select_cursor = db1.cursor()
-
+insert_cursor  =db1.cursor()
 
 
 #Read if blocks which are logged
-str_logged = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                       throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      is_method_have_param, method_param_type, method_param_name, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
-                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 1 "
+str_logged = "select  if_expr, loc_till_if, is_till_if_logged, till_if_log_count, till_if_log_levels, operators_till_if, operators_count_till_if, variables_till_if,  \
+                       variables_count_till_if,method_call_names_till_if, method_call_count_till_if,  is_return_in_till_if, throw_throws_till_if, \
+                       if_in_till_if, if_count_in_till_if, is_assert_till_if, is_method_have_param,  method_param_type, method_param_name, method_param_count,\
+                       is_return_in_if, throw_throws_if, is_assert_if, is_null_condition_if, is_instance_of_condition_if, package_name, class_name, method_name\
+                       from "+ table_if_feature +" where if_expr not like '%isTraceEnabled()' and \
+                       if_expr not like '%isDebugEnabled()' and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'\
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()' and if_expr!='' and  is_if_logged= 1"
    
-
 
 
 print "str_logged = ", str_logged
@@ -107,70 +101,40 @@ logged_data = select_cursor.fetchall()
 
 target = list()
 
-logged_catch_block_count = 0
-logged_catch_block_count = len(logged_data)
-print  " size = ", logged_catch_block_count
+logged_if_block_count = 0
+logged_if_block_count = len(logged_data)
+print  " size = ", logged_if_block_count
 
-logged_catch_n_features = list()
-logged_catch_t_features = list()
-#logged_complete_catch_features = list()
+logged_if_n_features = list()
+logged_if_t_features = list()
+#logged_complete_if_features = list()
 
 
 for d in logged_data:
-    temp = list()
-       
-    t_catch_exc     = d[0]
-    t_package_name  = d[1]
-    t_class_name    = d[2]
-    t_method_name   = d[3]
-  
-    t_try_log_levels =  d[7]
+    temp = list()       
     
-    t_method_param_type =d[22]
-    t_method_param_name =d[23]
-    
-    t_method_call_names_try =d[25]
-       
-    t_operators_in_try =d[27]
-       
-    t_variables_in_try =d[29]
+    n_loc_till_if          =  d[1]
+    n_till_if_log_count   = d[3]
+    n_operators_count_till_if = d[6]
+    n_variables_count_till_if    = d[8]
+    n_method_call_count_till_if   = d[10]
+    n_if_count_in_till_if         =d[14]
+    n_method_param_count        =d[19]
+               
+    temp.append(n_loc_till_if )   
+    temp.append(n_till_if_log_count)
+    temp.append(n_operators_count_till_if)
+    temp.append(n_variables_count_till_if)
+    temp.append(n_method_call_count_till_if )
+    temp.append(n_if_count_in_till_if )    
+    temp.append(n_method_param_count )
         
-    t_method_call_names_till_try =d[31]
-        
-    t_operators_till_try  =d[33]
-        
-    t_variables_till_try =d[35]
-     
-    t_till_try_log_levels =d[40]
-         
-    text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
-                         t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
-                         t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
-                         t_till_try_log_levels
-    
-    #Applying camel casing
-    text_features = utill.camel_case_convert(text_features)
-    text_features = utill.stem_it(text_features)
-    
-    operator_string =  t_operators_in_try +" "+ t_operators_till_try
-    
-    text_features =  text_features +" " + operator_string
-    
-    text_features =  text_features.strip()
- 
-    
-      
-    #Call a cleaning function
-    
-   # logged_catch_n_features.append(temp)     
-    logged_catch_t_features.append(text_features)
+    logged_if_n_features.append(temp)     
     target.append(1)                  
 
 #====Inserting for negative class======#
-for i  in range(len(logged_catch_t_features)):
+for i  in range(len(logged_if_n_features)):
     target.append(0)
-    
-print "len=", len(logged_catch_t_features)    , "targte= ", len(target)
 
 total_knn_acc = 0.0
 total_knn_precision = 0.0
@@ -203,16 +167,18 @@ total_rf_f1 = 0.0
 total_rf_roc = 0.0
 
 
-#Read if blocks which are logged
-str_non_logged = "select  catch_exc, package_name, class_name, method_name, try_loc, is_try_logged, try_log_count, try_log_levels, have_previous_catches, previous_catches_logged, \
-                      is_return_in_try, is_return_in_catch, is_catch_object_ignore, is_interrupted_exception, is_thread_sleep_try,\
-                       throw_throws_try,  throw_throws_catch, if_in_try, if_count_in_try, is_assert_in_try, is_assert_in_catch, \
-                      is_method_have_param, method_param_type, method_param_name, method_param_count, method_call_names_try, \
-                      method_call_count_try, operators_in_try, operators_count_in_try, variables_in_try, variables_count_try,\
-                      method_call_names_till_try, method_call_count_till_try, operators_till_try, operators_count_till_try, variables_till_try,\
-                      variables_count_till_try, loc_till_try, is_till_try_logged, till_try_log_count, till_try_log_levels,is_return_till_try, throw_throws_till_try, \
-                     if_in_till_try, if_count_in_till_try,  is_assert_till_try  from "+ table_catch_feature +" where catch_exc!='' and  is_catch_logged= 0 "#limit 0,"+ (str)(logged_catch_block_count)
+#Read if blocks which are non logged
+str_non_logged = "select  if_expr, loc_till_if, is_till_if_logged, till_if_log_count, till_if_log_levels, operators_till_if, operators_count_till_if, variables_till_if,  \
+                       variables_count_till_if,method_call_names_till_if, method_call_count_till_if,  is_return_in_till_if, throw_throws_till_if, \
+                       if_in_till_if, if_count_in_till_if, is_assert_till_if, is_method_have_param,  method_param_type, method_param_name, method_param_count,\
+                       is_return_in_if, throw_throws_if, is_assert_if, is_null_condition_if, is_instance_of_condition_if, package_name, class_name, method_name\
+                       from "+ table_if_feature +" where if_expr not like '%isTraceEnabled()'  and \
+                       if_expr not like '%isDebugEnabled()'  and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'  \
+                       and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and if_expr!='' and  is_if_logged= 0"
    
+   
+   
+
 
 print "str_non_logged = ", str_non_logged
 select_cursor.execute(str_non_logged)
@@ -225,12 +191,12 @@ for  random_seed_val_cross_validation in rand_array:
     
     np.random.seed(random_seed_val_tuple_selection)
     indices = list()
-    indices = np.random.permutation(len(non_logged_data))[:len(logged_catch_t_features)]
+    indices = np.random.permutation(len(non_logged_data))[:len(logged_if_n_features)]
 
-    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_t_features)
+    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged if n features=", len(logged_if_n_features)
 
-    #non_logged_catch_n_features = list()
-    non_logged_catch_t_features = list()
+    non_logged_if_n_features = list()
+    #non_logged_if_t_features = list()
 
     valid_index=-1
 
@@ -241,63 +207,33 @@ for  random_seed_val_cross_validation in rand_array:
         if valid_index in indices:   
             temp = list()
     
-            t_catch_exc     = d[0]
-            t_package_name  = d[1]
-            t_class_name    = d[2]
-            t_method_name   = d[3]
-     
-            t_try_log_levels =  d[7]    
-              
-            t_method_param_type =d[22]
-            t_method_param_name =d[23]   
-              
-            t_method_call_names_try =d[25]       
-            t_operators_in_try =d[27]            
-    
-            t_variables_in_try =d[29]   
-          
-            t_method_call_names_till_try =d[31]    
-    
-            t_operators_till_try  =d[33]
-    
-            t_variables_till_try =d[35]
-    
-            t_till_try_log_levels =d[40]
-    
-    
-            text_features =      t_catch_exc+ " "+            t_package_name +" "                  + t_class_name+" "        + t_method_name  +" "+\
-                         t_method_param_type + " " +  t_method_param_name +" " +            t_method_call_names_try +" " +\
-                         t_variables_in_try  +" " +   t_try_log_levels +" "+                  t_method_call_names_till_try +" "+   t_variables_till_try +"  "+\
-                         t_till_try_log_levels
-    
-            #Applying camel casing
-            text_features = utill.camel_case_convert(text_features)
-            text_features = utill.stem_it(text_features)
-    
-            operator_string =  t_operators_in_try +" "+ t_operators_till_try
-    
-            text_features =  text_features +" " + operator_string
-    
-            text_features =  text_features.strip() 
+            n_loc_till_if          =  d[1]
+            n_till_if_log_count   = d[3]
+            n_operators_count_till_if = d[6]
+            n_variables_count_till_if    = d[8]
+            n_method_call_count_till_if   = d[10]
+            n_if_count_in_till_if         =d[14]
+            n_method_param_count        =d[19]
+               
+            temp.append(n_loc_till_if )   
+            temp.append(n_till_if_log_count)
+            temp.append(n_operators_count_till_if)
+            temp.append(n_variables_count_till_if)
+            temp.append(n_method_call_count_till_if )
+            temp.append(n_if_count_in_till_if )    
+            temp.append(n_method_param_count )
         
-            non_logged_catch_t_features.append(text_features)
+            non_logged_if_n_features.append(temp)     
             
-            #target.append(0)  Removing from here moving up                  
-                      
-
-
     #=======================================
-    total_catch_t_features =  logged_catch_t_features + non_logged_catch_t_features
-    print "len of features=", len(total_catch_t_features)
+    vectorizer = TfidfVectorizer(min_df=1)    
+    total_data =  logged_if_n_features  +  non_logged_if_n_features
     
-    vectorizer = TfidfVectorizer(min_df=1)   
-    total_data =vectorizer.fit_transform(np.asarray(total_catch_t_features))
-   
-
-
-    #print total_data
-    #print  " target", target
-
+    #=======================================
+ 
+    #========================================================= 
+    #total_data = logged_if_data   + non_logged_if_data
+    #=========================================================
 
     cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val_cross_validation)
@@ -308,19 +244,18 @@ for  random_seed_val_cross_validation in rand_array:
     knn = KNeighborsClassifier(algorithm='auto', leaf_size=temp_leaf_size+1, metric='minkowski',
                                n_neighbors=temp_nbr+1, p=2, weights='uniform')
   
-    knn_score = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_score = cross_validation.cross_val_score(knn,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    knn_acc = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_acc = cross_validation.cross_val_score(knn,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    knn_precision = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_precision = cross_validation.cross_val_score(knn,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    knn_recall = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_recall = cross_validation.cross_val_score(knn,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    knn_f1= cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_f1= cross_validation.cross_val_score(knn,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    knn_roc = cross_validation.cross_val_score(knn,total_data.toarray(),
+    knn_roc = cross_validation.cross_val_score(knn,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
-    
     print "knn =", knn_score.mean()
     print "knn accuracy=", knn_acc.mean()
     print "knn precision=", knn_precision.mean()
@@ -341,17 +276,17 @@ for  random_seed_val_cross_validation in rand_array:
     temp_max_depth  = dt_depth   
     dt  =DecisionTreeClassifier(max_depth= temp_max_depth+1)
         
-    dt_score = cross_validation.cross_val_score(dt,total_data.toarray(), 
+    dt_score = cross_validation.cross_val_score(dt,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    dt_acc = cross_validation.cross_val_score(dt,total_data.toarray(), 
+    dt_acc = cross_validation.cross_val_score(dt,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    dt_precision = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_precision = cross_validation.cross_val_score(dt,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    dt_recall = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_recall = cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    dt_f1= cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_f1= cross_validation.cross_val_score(dt,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    dt_roc = cross_validation.cross_val_score(dt,total_data.toarray(),
+    dt_roc = cross_validation.cross_val_score(dt,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
         
     print "dt =", dt_score.mean()
@@ -371,17 +306,17 @@ for  random_seed_val_cross_validation in rand_array:
 #========= GnB===================================================#        
     gnb = GaussianNB() # Guasian Niave Bayes
     
-    gnb_score = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_score = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    gnb_acc = cross_validation.cross_val_score(gnb, total_data.toarray(),
+    gnb_acc = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
       np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    gnb_precision = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_precision = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    gnb_recall = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_recall = cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    gnb_f1= cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_f1= cross_validation.cross_val_score(gnb,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    gnb_roc = cross_validation.cross_val_score(gnb,total_data.toarray(),
+    gnb_roc = cross_validation.cross_val_score(gnb,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
     print "gnb =", gnb_score.mean()
     print "gnb accuracy=", gnb_acc.mean()
@@ -402,17 +337,17 @@ for  random_seed_val_cross_validation in rand_array:
     temp_estimators  =  ada_estimators
   
     ada =    AdaBoostClassifier(n_estimators=temp_estimators+1)
-    ada_score = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_score = cross_validation.cross_val_score(ada,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    ada_acc = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_acc = cross_validation.cross_val_score(ada,np.asarray(total_data), 
        np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    ada_precision = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_precision = cross_validation.cross_val_score(ada,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    ada_recall = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_recall = cross_validation.cross_val_score(ada,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    ada_f1= cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_f1= cross_validation.cross_val_score(ada,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    ada_roc = cross_validation.cross_val_score(ada,total_data.toarray(),
+    ada_roc = cross_validation.cross_val_score(ada,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
     
     print "ada =",          ada_score.mean()
@@ -436,17 +371,17 @@ for  random_seed_val_cross_validation in rand_array:
    
     rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
     
-    rf_score = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
                                             np.asarray(target), cv=cv)
-    rf_acc = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_acc = cross_validation.cross_val_score(rf,np.asarray(total_data), 
          np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-    rf_precision = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_precision = cross_validation.cross_val_score(rf,np.asarray(total_data), 
               np.asarray(target), cv=cv,score_func=metrics.precision_score)
-    rf_recall = cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_recall = cross_validation.cross_val_score(rf,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.recall_score)
-    rf_f1= cross_validation.cross_val_score(rf,total_data.toarray(),
+    rf_f1= cross_validation.cross_val_score(rf,np.asarray(total_data), 
             np.asarray(target), cv=cv,score_func=metrics.f1_score)
-    rf_roc = cross_validation.cross_val_score(rf, total_data.toarray(),
+    rf_roc = cross_validation.cross_val_score(rf,np.asarray(total_data),
          np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
    
     total_rf_acc =        total_rf_acc          + rf_acc.mean()
@@ -487,12 +422,6 @@ total_rf_f1 =         (total_rf_f1 *100)/10
 total_rf_roc =        (total_rf_roc*100)/10
 
 
-#===========To handle mysql gone away==============#
-
-db2= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
-insert_cursor  =db2.cursor()
-
-
 param ="knn leaf size ="+(str)(knn_leaf_size)+"  knn nbr="+(str)(knn_nbr)
 insert_knn_str =   "insert into  " +final_result_table+" values( \"knn\", '"+project+ "','" +param+"',"+(str)(total_knn_acc.mean()) + ", "+ (str)(total_knn_precision.mean())+ \
         "," + (str)(total_knn_recall.mean()) +","+ (str)(total_knn_f1.mean()) +","+ (str)(total_knn_roc.mean())+")"
@@ -523,7 +452,7 @@ insert_gnb_str =   "insert into  " +final_result_table+" values( \"gnb\", '"+pro
 print "insert str = ",insert_gnb_str
 insert_cursor.execute(insert_gnb_str)
 
-db2.commit()
+db1.commit()
 
 
 

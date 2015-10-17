@@ -241,7 +241,7 @@ total_rf_f1 = 0.0
 total_rf_roc = 0.0
 
 
-#Read if blocks which are logged
+#Read if blocks which are non logged
 str_non_logged = "select  if_expr, loc_till_if, is_till_if_logged, till_if_log_count, till_if_log_levels, operators_till_if, operators_count_till_if, variables_till_if,  \
                        variables_count_till_if,method_call_names_till_if, method_call_count_till_if,  is_return_in_till_if, throw_throws_till_if, \
                        if_in_till_if, if_count_in_till_if, is_assert_till_if, is_method_have_param,  method_param_type, method_param_name, method_param_count,\
