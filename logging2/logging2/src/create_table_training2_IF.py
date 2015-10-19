@@ -43,6 +43,7 @@ Total Count of IF blocks , logged if block and non-logged if blocks
 
 total_if_count=0
 logged_if_count = 0
+non_logged_if_count = 0
 
 total_if_str = "select  count(*) from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
                if_expr not like '%isDebugEnabled()' and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'\
@@ -60,13 +61,27 @@ if_with_log_str = "select  count(*) from "+ if_training_table+" where if_expr!=\
                and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'"
                
 select_cursor.execute(if_with_log_str)
-if_with_log = 0
+logged_if_count = 0
 temp_data =select_cursor.fetchall()
 for temp in temp_data:
-    if_with_log = temp[0]    
+    logged_if_count = temp[0]    
+    
+    
+    
+if_non_log_str = "select  count(*) from "+ if_training_table+" where if_expr!=\'\' and  is_if_logged = 0 and \
+                if_expr not like '%isTraceEnabled()' and \
+               if_expr not like '%isDebugEnabled()' and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'\
+               and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'"
+               
+select_cursor.execute(if_non_log_str)
+non_logged_if_count = 0
+temp_data =select_cursor.fetchall()
+for temp in temp_data:
+    non_logged_if_count = temp[0]        
 
 print "Total If Count=", total_if_count
-print "IF with logs=", if_with_log   
+print "IF with logs=", logged_if_count  
+print "IF without log=", non_logged_if_count
 
 """=======================================================================
 @Note: Result 2: Loc of method_BI in logged Vs. non-logged If block
