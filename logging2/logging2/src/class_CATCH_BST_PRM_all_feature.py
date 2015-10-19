@@ -699,6 +699,8 @@ total_rf_recall =     (total_rf_recall*100)/10
 total_rf_f1 =         (total_rf_f1 *100)/10          
 total_rf_roc =        (total_rf_roc*100)/10
 
+db2= MySQLdb.connect(host="localhost", user=user, passwd=password,db=database, port=port)
+insert_cursor  =db2.cursor()
 
 param ="knn leaf size ="+(str)(knn_leaf_size)+"  knn nbr="+(str)(knn_nbr)
 insert_knn_str =   "insert into  " +final_result_table+" values( \"knn\", '"+project+ "','" +param+"',"+(str)(total_knn_acc.mean()) + ", "+ (str)(total_knn_precision.mean())+ \
@@ -730,7 +732,7 @@ insert_gnb_str =   "insert into  " +final_result_table+" values( \"gnb\", '"+pro
 print "insert str = ",insert_gnb_str
 insert_cursor.execute(insert_gnb_str)
 
-db1.commit()
+db2.commit()
 
 
 
