@@ -219,7 +219,7 @@ select_cursor.execute(str)
 data = select_cursor.fetchall()
 avg_method_call_count_till_if_non_logged =  data[0][0]    
 
-print " Logged method [MNM]=", "avg method call count method Bi logged if=", avg_method_call_count_till_if_logged, "  avg method call count method BI non logged if=", avg_method_call_count_till_if_non_logged
+print " Logged method [MCM]=", "avg method call count method Bi logged if=", avg_method_call_count_till_if_logged, "  avg method call count method BI non logged if=", avg_method_call_count_till_if_non_logged
 
 
 """===========================================================================================
@@ -268,9 +268,33 @@ avg_if_count_till_if_non_logged =  data[0][0]
 print "avg if count method BI [IM]=", " avg if count method BI logged if=", avg_if_count_till_if_logged, "  avg if count method BI non logged if=", avg_if_count_till_if_non_logged
 
 
+"""===========================================================================================
+@Note: Result 10: Avg if count in method_BI logged Vs Non logged if
+=============================================================================================="""
+
+str =  "select  avg(method_param_count)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
+               if_expr not like '%isDebugEnabled()' and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'\
+               and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and is_if_logged = 1 "
+  
+select_cursor.execute(str)
+data = select_cursor.fetchall()
+avg_method_param_count_if_logged =  data[0][0]
+
+str =  "select  avg(method_param_count) from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
+               if_expr not like '%isDebugEnabled()' and if_expr not like '%isInfoEnabled()' and if_expr not like '%isWarnEnabled()'\
+               and if_expr not like '%isErrorEnabled()'  and if_expr not like '%isFatalEnabled()'  and is_if_logged = 0 "
+  
+select_cursor.execute(str)
+data = select_cursor.fetchall()
+avg_method_param_count_if_non_logged =  data[0][0]    
+
+print "avg method param count [PCM]=", " avg method param count logged if=", avg_method_param_count_if_logged, "  avg method param count non logged if=", avg_method_param_count_if_non_logged
+
+
+
 
 """===========================================================================================
-@Note: Result 10: method_have_parameter logged Vs Non logged if
+@Note: Result 11: method_have_parameter logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select  count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -294,7 +318,7 @@ print "method have param [PM]=", " method have param logged if=", method_have_pa
 
 
 """===========================================================================================
-@Note: Result 11: null logged Vs Non logged if
+@Note: Result 12: null logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -318,7 +342,7 @@ print "null condition [NC]=", " null condition count logged if=", null_condition
 
 
 """===========================================================================================
-@Note: Result 12: instanceOf logged Vs Non logged if
+@Note: Result 13: instanceOf logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -343,7 +367,7 @@ print "instanceOf condition [IOC]=", " instanceOf condition count logged if=", i
 
 
 """===========================================================================================
-@Note: Result 13: throw/throws if logged Vs Non logged if
+@Note: Result 14: throw/throws if logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -368,7 +392,7 @@ print "throw count [TTI]=", " throw count logged if=", throw_count_if_logged, " 
 
 
 """===========================================================================================
-@Note: Result 14: throw/throws in method_BI logged Vs Non logged if
+@Note: Result 15: throw/throws in method_BI logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -393,7 +417,7 @@ print "throw count [TTM]=", " throw count till if logged if=", throw_count_till_
 
 
 """===========================================================================================
-@Note: Result 15: return in if block logged Vs Non logged if
+@Note: Result 16: return in if block logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -416,7 +440,7 @@ print " return in if [RC]=", " return count in if if logged if=", return_count_t
 
 
 """===========================================================================================
-@Note: Result 16: RETURN  in method_BI logged Vs Non logged if
+@Note: Result 17: RETURN  in method_BI logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -440,7 +464,7 @@ print "return count [RM]=", " return count till if logged if=", return_count_til
 
 
 """===========================================================================================
-@Note: Result 17: assert in if logged Vs Non logged if
+@Note: Result 18: assert in if logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -465,7 +489,7 @@ print "assert count [AI]=", " assert count in if logged if=", assert_count_in_if
 
 
 """===========================================================================================
-@Note: Result 18: assert in till if logged Vs Non logged if
+@Note: Result 19: assert in till if logged Vs Non logged if
 =============================================================================================="""
 
 str =  "select count(*)  from "+ if_training_table+" where if_expr!=\'\' and if_expr not like '%isTraceEnabled()%' and \
@@ -485,4 +509,6 @@ data = select_cursor.fetchall()
 assert_count_in_till_if_if_non_logged =  data[0][0]    
 
 print "assert count [AM]=", " assert count in till if logged if=", assert_count_in_till_if_if_logged, "  assert count in till if non logged if=", assert_count_in_till_if_if_non_logged
+
+
 
