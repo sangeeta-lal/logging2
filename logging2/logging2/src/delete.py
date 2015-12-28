@@ -30,6 +30,7 @@ import scipy.sparse
 import re
 from nltk.stem.porter import PorterStemmer
 from sklearn import metrics
+from sklearn.feature_selection import SelectKBest
 
 import utill
 
@@ -59,7 +60,7 @@ ada_estimators  =81
 rf_estimators  =91
 #"""
 
-#"""
+"""
 port=3306
 user="root"
 password="1234"
