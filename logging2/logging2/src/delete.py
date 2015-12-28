@@ -37,7 +37,7 @@ import utill
 
 
 """=================================================================================================
-@Uses: This file will be used to create classifier using boolean features 
+@Uses: This file will be used to create classifier using boolean  features 
 1. This file will use best parameters used in the classifier
 2. This file will report the average value of classifier 10 runs
 ======================================================================================="""
