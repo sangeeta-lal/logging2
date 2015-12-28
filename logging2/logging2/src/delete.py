@@ -31,6 +31,7 @@ import re
 from nltk.stem.porter import PorterStemmer
 from sklearn import metrics
 from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 
 import utill
 
