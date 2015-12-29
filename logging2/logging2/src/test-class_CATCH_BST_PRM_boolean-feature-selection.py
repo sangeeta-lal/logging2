@@ -217,7 +217,7 @@ for  random_seed_val_cross_validation in rand_array:
     indices = list()
     indices = np.random.permutation(len(non_logged_data))[:len(logged_catch_n_features)]
 
-    print "len not logged tuples=", len(non_logged_data), " indices len=", len(indices),  "  logged catch n features=", len(logged_catch_n_features)
+    print "len not logged tuples=", len(non_logged_data), "  indices len=", len(indices),  "  logged catch n features=", len(logged_catch_n_features)
 
     non_logged_catch_n_features = list()
     #non_logged_catch_t_features = list()
@@ -497,7 +497,7 @@ for  random_seed_val_cross_validation in rand_array:
         insert_cursor.execute(insert_ada_str)
         """
         param ="rf esti ="+(str)(rf_estimators)
-        insert_rf_str =   "insert into  " +temp_result_table+" values( \"rf\", '"+project+ "','" +param+"',"+(str)(total_rf_acc.mean()) + ", "+ (str)(total_rf_precision.mean())+ \
+        insert_rf_str =   "insert into  " +temp_result_table+" values( \"rf\", '"+project+ "','" +param+"',"+features_count+","+(str)(total_rf_acc.mean()) + ", "+ (str)(total_rf_precision.mean())+ \
                 "," + (str)(total_rf_recall.mean()) +","+ (str)(total_rf_f1.mean()) +","+ (str)(total_rf_roc.mean())+")"
         print "insert str = ",insert_rf_str
         insert_cursor.execute(insert_rf_str)
