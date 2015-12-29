@@ -188,11 +188,7 @@ total_ada_recall = 0.0
 total_ada_f1 = 0.0
 total_ada_roc = 0.0
 
-total_rf_acc = 0.0
-total_rf_precision = 0.0
-total_rf_recall = 0.0
-total_rf_f1 = 0.0
-total_rf_roc = 0.0
+
 
 
 #Read if blocks which are logged
@@ -424,7 +420,12 @@ for  random_seed_val_cross_validation in rand_array:
         """
       
     #========================Random Forest===================================#
-    
+        
+        total_rf_acc = 0.0
+        total_rf_precision = 0.0
+        total_rf_recall = 0.0
+        total_rf_f1 = 0.0
+        total_rf_roc = 0.0
     
         temp_estimators  = rf_estimators
         print  "ver=", sklearn.__version__
