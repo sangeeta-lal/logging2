@@ -286,10 +286,12 @@ for  random_seed_val_cross_validation in rand_array:
     #========================================================= 
     #total_data = logged_catch_data   + non_logged_catch_data
     #=========================================================
+    print "total data = ", total_data
     for i in range(20): 
         feature_count = i+1
-        feature_selector = SelectKBest(score_func = chi2, k= feature_count)
-        total_data=  feature_selector.fit_transform(total_data, target)    
+        print " count = ",feature_count
+        feature_selector = SelectKBest( chi2, k= feature_count)
+        trunc_total_data=  feature_selector.fit_transform(total_data, target)    
         
         cv = cross_validation.ShuffleSplit(len(target), n_iter=10, test_size=0.30, 
                                    random_state=random_seed_val_cross_validation)
@@ -425,21 +427,22 @@ for  random_seed_val_cross_validation in rand_array:
     
     
         temp_estimators  = rf_estimators
+        print  "ver=", sklearn.__version__
        
         rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
         
-        rf_score = cross_validation.cross_val_score(rf,np.asarray(total_data), 
+        rf_score = cross_validation.cross_val_score(rf,np.asarray(trunc_total_data), 
                                                 np.asarray(target), cv=cv)
-        rf_acc = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-             np.asarray(target), cv=cv, score_func=metrics.accuracy_score)
-        rf_precision = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-                  np.asarray(target), cv=cv,score_func=metrics.precision_score)
-        rf_recall = cross_validation.cross_val_score(rf,np.asarray(total_data), 
-                np.asarray(target), cv=cv,score_func=metrics.recall_score)
-        rf_f1= cross_validation.cross_val_score(rf,np.asarray(total_data), 
-                np.asarray(target), cv=cv,score_func=metrics.f1_score)
-        rf_roc = cross_validation.cross_val_score(rf,np.asarray(total_data),
-             np.asarray(target), cv=cv, score_func=metrics.roc_auc_score)
+        rf_acc = cross_validation.cross_val_score(rf,np.asarray(trunc_total_data), 
+             np.asarray(target), cv=cv, scoring='accuracy')
+        rf_precision = cross_validation.cross_val_score(rf,np.asarray(trunc_total_data), 
+                  np.asarray(target), cv=cv,scoring='precision')
+        rf_recall = cross_validation.cross_val_score(rf,np.asarray(trunc_total_data), 
+                np.asarray(target), cv=cv,scoring='recall')
+        rf_f1= cross_validation.cross_val_score(rf,np.asarray(trunc_total_data), 
+                np.asarray(target), cv=cv,scoring='f1')
+        rf_roc = cross_validation.cross_val_score(rf,np.asarray(trunc_total_data),
+             np.asarray(target), cv=cv, scoring='roc_auc')
        
         total_rf_acc =        total_rf_acc          + rf_acc.mean()
         total_rf_precision =  total_rf_precision    + rf_precision.mean()
@@ -499,7 +502,7 @@ for  random_seed_val_cross_validation in rand_array:
         insert_cursor.execute(insert_ada_str)
         """
         param ="rf esti ="+(str)(rf_estimators)
-        insert_rf_str =   "insert into  " +temp_result_table+" values( \"rf\", '"+project+ "','" +param+"',"+features_count+","+(str)(total_rf_acc.mean()) + ", "+ (str)(total_rf_precision.mean())+ \
+        insert_rf_str =   "insert into  " +temp_result_table+" values( \"rf\", '"+project+ "','" +param+"',"+(str)(feature_count)+","+(str)(total_rf_acc.mean()) + ", "+ (str)(total_rf_precision.mean())+ \
                 "," + (str)(total_rf_recall.mean()) +","+ (str)(total_rf_f1.mean()) +","+ (str)(total_rf_roc.mean())+")"
         print "insert str = ",insert_rf_str
         insert_cursor.execute(insert_rf_str)
