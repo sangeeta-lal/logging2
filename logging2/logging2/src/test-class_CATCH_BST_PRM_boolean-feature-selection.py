@@ -477,7 +477,7 @@ for  random_seed_val_cross_validation in rand_array:
         total_ada_f1 =         (total_ada_f1 *100)/10          
         total_ada_roc =        (total_ada_roc*100)/10
         """
-        total_rf_acc =        (total_rf_acc*100)      
+        total_rf_acc =        (total_rf_acc*100 )      
         total_rf_precision =  (total_rf_precision*100) 
         total_rf_recall =     (total_rf_recall*100)       
         total_rf_f1 =         (total_rf_f1 *100)          
