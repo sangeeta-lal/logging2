@@ -30,6 +30,8 @@ import scipy.sparse
 import re
 from nltk.stem.porter import PorterStemmer
 from sklearn import metrics
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
 
 import utill
 
@@ -57,7 +59,7 @@ ada_estimators  =81
 rf_estimators  =91
 #"""
 
-"""
+#"""
 port=3306
 user="root"
 password="1234"
@@ -285,7 +287,7 @@ for  random_seed_val_cross_validation in rand_array:
     #total_data = logged_catch_data   + non_logged_catch_data
     #=========================================================
     for i in range(20): 
-        features_count = i+1
+        feature_count = i+1
         feature_selector = SelectKBest(score_func = chi2, k= feature_count)
         total_data=  feature_selector.fit_transform(total_data, target)    
         
@@ -422,7 +424,7 @@ for  random_seed_val_cross_validation in rand_array:
     #========================Random Forest===================================#
     
     
-        temp_estimator  = rf_estimators
+        temp_estimators  = rf_estimators
        
         rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
         

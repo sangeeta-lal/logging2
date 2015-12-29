@@ -522,7 +522,7 @@ for  random_seed_val_cross_validation in rand_array:
   
 #========================Random Forest===================================#
 
-    temp_estimator  = rf_estimators
+    temp_estimators  = rf_estimators
    
     rf  =  RandomForestClassifier(n_estimators=temp_estimators+1)
     
