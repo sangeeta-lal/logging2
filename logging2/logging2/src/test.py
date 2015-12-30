@@ -82,7 +82,12 @@ total_text = text_p_features + text_n_features
 print "total text = ", total_text
 vectorizer = TfidfVectorizer(min_df=1)
 total_data =  vectorizer.fit_transform( np.asarray(total_text))
-print total_data
+print total_data.shape[0]
+i=9.8
+while(i<=10):
+    print int(i)
+    i=i+2
+    
 
 """
  x_data_tfidf=vectorizer.fit_transform( np.asarray(temp_total_data))
