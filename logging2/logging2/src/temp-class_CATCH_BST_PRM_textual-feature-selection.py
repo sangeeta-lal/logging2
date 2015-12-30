@@ -37,7 +37,7 @@ from sklearn import metrics
 from sklearn import metrics
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
-
+from sklearn.feature_selection import f_classif
 import math
 import utill
 
@@ -301,9 +301,11 @@ for  random_seed_val_cross_validation in rand_array:
     i=10
     while(feature_count<=total_features): 
         feature_count = int((total_features*i)/100)
-        i=1+10
+        i=i+10
         print " count = ",feature_count
-        feature_selector = SelectKBest( chi2, k= feature_count)
+        
+        #feature_selector = SelectKBest( chi2, k= feature_count)
+        feature_selector = SelectKBest( f_classif, k= feature_count)
         trunc_total_data=  feature_selector.fit_transform(total_data, target)    
         
         

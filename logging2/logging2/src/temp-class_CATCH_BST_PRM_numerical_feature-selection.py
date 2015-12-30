@@ -31,6 +31,7 @@ from nltk.stem.porter import PorterStemmer
 from sklearn import metrics
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
+from sklearn.feature_selection import f_classif
 import utill
 
 
@@ -262,7 +263,8 @@ for  random_seed_val_cross_validation in rand_array:
     for i in range(14): 
         feature_count = i+1
         print " count = ",feature_count
-        feature_selector = SelectKBest( chi2, k= feature_count)
+       # feature_selector = SelectKBest( chi2, k= feature_count)
+        feature_selector = SelectKBest( f_classif, k= feature_count)
         trunc_total_data=  feature_selector.fit_transform(total_data, target)    
         
     
