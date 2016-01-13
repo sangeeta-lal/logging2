@@ -10,8 +10,8 @@ import csv
 @Uses:  This file is used to create tables in the paper
 @Data: It will use "training2  catch"  for creating the tables for APSEC-2015 paper
 """
-project = "tomcat_"
-#project="cloudstack_"
+#project = "tomcat_"
+project="cloudstack_"
 
 """
 port=3307
